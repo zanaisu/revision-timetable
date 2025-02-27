@@ -1,0 +1,33 @@
+<div class="settings-panel">
+    <div class="d-flex flex-column">
+        <button class="btn btn-light mb-2" onclick="toggleSettings()"><i class="fas fa-cog"></i></button>
+        <button class="btn btn-info" onclick="toggleCurriculum()"><i class="fas fa-book"></i></button>
+    </div>
+</div>
+<div id="settingsModal" class="settings-modal">
+    <h4>Settings</h4>
+    <form method="POST" action="{{ url_for('update_subjects') }}">
+        <div class="form-group">
+            <h5>UpLearn Subjects</h5>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="chemistry" name="chemistry"
+                       {% if current_user.subjects and current_user.subjects.chemistry %}checked{% endif %}>
+                <label class="custom-control-label" for="chemistry">Chemistry</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="biology" name="biology"
+                       {% if current_user.subjects and current_user.subjects.biology %}checked{% endif %}>
+                <label class="custom-control-label" for="biology">Biology</label>
+            </div>
+        </div>
+        <button type="button" class="btn btn-light" onclick="toggleDarkMode()">
+            <span id="theme-icon">🌙</span> Theme
+        </button>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" onclick="toggleSettings()">Close</button>
+    </form>
+    <div class="settings-footer">
+        <span>Logged in as {{ user.username }}</span>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    </div>
+</div>

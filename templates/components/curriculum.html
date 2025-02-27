@@ -1,0 +1,292 @@
+<div id="curriculumPanel" class="curriculum-page" data-initial-view="{{ 'true' if initial_view else 'false' }}">
+    <div class="curriculum-header">
+        <button class="btn btn-light back-btn" onclick="toggleCurriculum()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h3>Curriculum Overview</h3>
+    </div>
+    <div id="curriculumContent" class="curriculum-content"></div>
+</div>
+
+<style>
+    .curriculum-page {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #f5f5f0; /* Match dashboard background */
+        z-index: 2000;
+        padding: 0;
+        overflow-y: auto;
+    }
+
+    .curriculum-header {
+        position: sticky;
+        top: 0;
+        background: #f0f0e8; /* Soft cream header */
+        padding: 15px 20px;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        z-index: 2001;
+        border-bottom: 1px solid #dee2e6;
+        background: #f8f9fa;
+    }
+
+    .dark-mode .curriculum-header {
+        background: #333;
+        border-color: #444;
+    }
+
+    .back-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .curriculum-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .curriculum-page.dark-mode {
+        background: #222;
+        color: #fff;
+    }
+
+    .dark-mode .back-btn {
+        background: #333;
+        color: #fff;
+        border-color: #444;
+    }
+
+    .dark-mode .back-btn:hover {
+        background: #444;
+    }
+
+    .curriculum-content .card {
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 25px;
+    }
+
+    .curriculum-content .card-header {
+        background: #4361ee;
+        color: white;
+        font-size: 1.25rem;
+        padding: 15px 20px;
+    }
+
+    .curriculum-content .module-title {
+        background: #eaeae2; /* Soft cream for module titles */
+        padding: 10px 15px;
+        margin: 15px -20px 15px;
+        border-left: 4px solid #4361ee;
+    }
+
+    .curriculum-content .year-title {
+        background: #f0f0e8; /* Matching cream for year titles */
+        padding: 12px 15px;
+        margin: 20px -20px 15px;
+        border-bottom: 2px solid #4361ee;
+        font-size: 1.2rem;
+    }
+
+    .curriculum-content ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .curriculum-content li {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 5px;
+    }
+
+    .curriculum-content .topic-title {
+        font-weight: 600;
+        color: #4361ee;
+    }
+
+    .curriculum-content .topic-content {
+        color: #666;
+        margin-left: 15px;
+    }
+
+    /* Dark mode adjustments */
+    .dark-mode .curriculum-content .card-header {
+        background: #3046c7;
+    }
+
+    .dark-mode .curriculum-content .module-title {
+        background: #444;
+        border-left-color: #7b91ff;
+    }
+
+    .dark-mode .curriculum-content .year-title {
+        background: #333;
+        border-bottom-color: #7b91ff;
+    }
+
+    .dark-mode .curriculum-content li {
+        border-bottom-color: #444;
+    }
+
+    .dark-mode .curriculum-content .topic-title {
+        color: #7b91ff;
+    }
+
+    .dark-mode .curriculum-content .topic-content {
+        color: #aaa;
+    }
+
+    .curriculum-page {
+        transition: opacity 0.3s ease-out;
+        opacity: 1;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const panel = document.getElementById('curriculumPanel');
+        const shouldShowInitially = panel.dataset.initialView === 'true';
+        
+        if (shouldShowInitially) {
+            panel.style.display = 'block';
+            loadCurriculumContent();
+        }
+    });
+
+    function toggleCurriculum() {
+        const panel = document.getElementById('curriculumPanel');
+        
+        if (panel.style.display === 'block') {
+            // Handle going back to dashboard
+            panel.style.display = 'none';
+            history.pushState({}, '', '/dashboard');
+            // Add smooth transition
+            panel.style.opacity = 0;
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 300);
+        } else {
+            // Show curriculum
+            history.pushState({}, '', '/curriculum');
+            panel.style.opacity = 1;
+            panel.style.display = 'block';
+            loadCurriculumContent();
+        }
+    }
+
+    function loadCurriculumContent() {
+        const content = document.getElementById('curriculumContent');
+        const panel = document.getElementById('curriculumPanel');
+        
+        if (!content.innerHTML) {
+            fetch('/static/data/curriculum.json')
+                .then(response => response.json())
+                .then(data => {
+                    const html = formatCurriculum(data);
+                    content.innerHTML = html;
+                })
+                .catch(error => {
+                    content.innerHTML = 'Error loading curriculum data';
+                    console.error('Error:', error);
+                });
+        }
+        
+        if (document.body.classList.contains('dark-mode')) {
+            panel.classList.add('dark-mode');
+        }
+    }
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function(event) {
+        const panel = document.getElementById('curriculumPanel');
+        if (window.location.pathname === '/curriculum') {
+            panel.style.display = 'block';
+            loadCurriculumContent();
+        } else {
+            panel.style.display = 'none';
+        }
+    });
+
+    function formatCurriculum(data) {
+        let html = '';
+        Object.entries(data).forEach(([subjectKey, subject]) => {
+            html += `<div class="card">
+                <div class="card-header">${subject.Title}</div>
+                <div class="card-body">`;
+            
+            if (subject.Papers) {
+                // Psychology structure
+                subject.Papers.forEach(paper => {
+                    html += `<div class="year-title">${paper.Title}</div>`;
+                    paper.Topics.forEach(topic => {
+                        html += formatPsychologyTopic(topic);
+                    });
+                });
+            } else if (subject.Years) {
+                // Biology structure
+                subject.Years.forEach(year => {
+                    html += `<div class="year-title">${year.Title}</div>`;
+                    year.Modules.forEach(module => {
+                        html += formatModule(module);
+                    });
+                });
+            } else if (subject.Modules) {
+                // Chemistry structure
+                subject.Modules.forEach(module => {
+                    html += formatModule(module);
+                });
+            }
+            
+            html += `</div></div>`;
+        });
+        return html;
+    }
+
+    function formatModule(module) {
+        let html = `<div class="module-title">${module.Title}</div>`;
+        
+        if (module.Description) {
+            html += `<p class="module-description"><em>${module.Description}</em></p>`;
+        }
+        
+        html += '<ul>';
+        if (module.Topics) {
+            module.Topics.forEach(topic => {
+                if (typeof topic === 'string') {
+                    html += `<li>${topic}</li>`;
+                } else {
+                    html += `<li>
+                        <div class="topic-title">${topic.Title}</div>
+                        ${topic.Content ? `<div class="topic-content">${topic.Content}</div>` : ''}
+                    </li>`;
+                }
+            });
+        }
+        html += '</ul>';
+        return html;
+    }
+
+    function formatPsychologyTopic(topic) {
+        let html = `<div class="module-title">${topic.Title}</div><ul>`;
+        if (Array.isArray(topic.Content)) {
+            topic.Content.forEach(item => {
+                html += `<li>${item}</li>`;
+            });
+        }
+        html += '</ul>';
+        return html;
+    }
+</script>

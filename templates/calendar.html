@@ -1,0 +1,53 @@
+<div class="calendar-modal">
+    <div class="calendar-controls">
+        <h4>Academic Calendar</h4>
+        <button class="btn btn-secondary" onclick="closeCalendarView()">Close</button>
+    </div>
+    <div class="calendar-grid">
+        {% for week in calendar_data %}
+        <div class="week-card">
+            <div class="week-header">
+                Week {{ week.week_number }}
+                <small class="text-muted">{{ week.start_date }} - {{ week.end_date }}</small>
+            </div>
+            {% for subject, data in week.subjects.items() %}
+            <div class="subject-section">
+                <div class="subject-title">
+                    {{ subject|replace('_', ' ') }}
+                    <span class="exam-date">Until: {{ data.end_date }}</span>
+                </div>
+                <ul class="list-group">
+                    {% for task in data.tasks %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ task }}
+                        {% if 'Chemistry' in task %}
+                            <a href="https://web.uplearn.co.uk/learn/chemistry-ocr-2" 
+                               class="uplearn-quick-link" target="_blank">
+                               <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        {% elif 'Biology (Y13)' in task %}
+                            <a href="https://web.uplearn.co.uk/learn/biology-ocr-2" 
+                               class="uplearn-quick-link" target="_blank">
+                               <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        {% elif 'Biology (Y12)' in task %}
+                            <a href="https://web.uplearn.co.uk/learn/biology-ocr-1" 
+                               class="uplearn-quick-link" target="_blank">
+                               <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        {% elif 'Psychology' in task %}
+                            <a href="https://classroom.google.com/" 
+                               class="uplearn-quick-link" target="_blank">
+                               <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="modal-overlay" onclick="closeCalendarView()"></div>

@@ -1,0 +1,501 @@
+
+{
+  "Biology": {
+    "Title": "OCR A-Level Biology (H420)",
+    "Years": [
+      {
+        "Name": "Year 12",
+        "Title": "AS Content",
+        "Modules": [
+          {
+            "Name": "Module 1",
+            "Title": "Development of Practical Skills in Biology",
+            "Description": "Applies to all modules and both years",
+            "Topics": [
+              {
+                "Title": "Planning experiments",
+                "Content": ""
+              },
+              {
+                "Title": "Collecting and recording data",
+                "Content": ""
+              },
+              {
+                "Title": "Analyzing and interpreting data",
+                "Content": ""
+              },
+              {
+                "Title": "Evaluating experiments",
+                "Content": ""
+              }
+            ]
+          },
+          {
+            "Name": "Module 2",
+            "Title": "Foundations in Biology",
+            "Topics": [
+              {
+                "Title": "Cell structure",
+                "Content": "microscopy, organelles, cell theory"
+              },
+              {
+                "Title": "Biological molecules",
+                "Content": "water, carbohydrates, lipids, proteins, nucleic acids"
+              },
+              {
+                "Title": "Enzymes",
+                "Content": "action, inhibition, factors affecting rate"
+              },
+              {
+                "Title": "Biological membranes",
+                "Content": "structure, transport, diffusion, osmosis, active transport"
+              },
+              {
+                "Title": "Cell division, diversity, and organisation",
+                "Content": "mitosis, meiosis, stem cells, specialised cells"
+              }
+            ]
+          },
+          {
+            "Name": "Module 3",
+            "Title": "Exchange and Transport",
+            "Topics": [
+              {
+                "Title": "Exchange surfaces",
+                "Content": "SA:V, diffusion, gas exchange in humans, insects, fish"
+              },
+              {
+                "Title": "Transport in animals",
+                "Content": "circulatory system, blood vessels, heart, cardiac cycle, oxygen dissociation"
+              },
+              {
+                "Title": "Transport in plants",
+                "Content": "xylem, phloem, transpiration, translocation"
+              }
+            ]
+          },
+          {
+            "Name": "Module 4",
+            "Title": "Biodiversity, Evolution & Disease",
+            "Topics": [
+              {
+                "Title": "Disease and the immune system",
+                "Content": "pathogens, primary & secondary response, vaccines"
+              },
+              {
+                "Title": "Biodiversity",
+                "Content": "sampling, classification, genetic diversity, conservation"
+              },
+              {
+                "Title": "Evolution and natural selection",
+                "Content": "Darwin, evidence, classification systems"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "Name": "Year 13",
+        "Title": "A2 Content",
+        "Modules": [
+          {
+            "Name": "Module 5",
+            "Title": "Communication, Homeostasis & Energy",
+            "Topics": [
+              {
+                "Title": "Communication and homeostasis",
+                "Content": "neuronal and hormonal communication"
+              },
+              {
+                "Title": "Excretion",
+                "Content": "liver, kidneys, nitrogenous waste"
+              },
+              {
+                "Title": "Neuronal communication",
+                "Content": "nerve impulses, synapses"
+              },
+              {
+                "Title": "Hormonal communication",
+                "Content": "endocrine system, adrenaline, insulin/glucagon"
+              },
+              {
+                "Title": "Plant and animal responses",
+                "Content": "tropisms, reflexes, muscle contraction"
+              },
+              {
+                "Title": "Photosynthesis",
+                "Content": "light-dependent & light-independent reactions, Calvin cycle"
+              },
+              {
+                "Title": "Respiration",
+                "Content": "glycolysis, link reaction, Krebs cycle, oxidative phosphorylation"
+              }
+            ]
+          },
+          {
+            "Name": "Module 6",
+            "Title": "Genetics, Evolution & Ecosystems",
+            "Topics": [
+              {
+                "Title": "Cellular control",
+                "Content": "gene expression, operons, mutations"
+              },
+              {
+                "Title": "Patterns of inheritance",
+                "Content": "monohybrid, dihybrid, sex-linked, chi-squared tests"
+              },
+              {
+                "Title": "Manipulating genomes",
+                "Content": "genetic engineering, PCR, gene sequencing"
+              },
+              {
+                "Title": "Cloning and biotechnology",
+                "Content": "microorganisms, artificial cloning, tissue culture"
+              },
+              {
+                "Title": "Ecosystems",
+                "Content": "food chains, nitrogen/carbon cycles, conservation"
+              },
+              {
+                "Title": "Populations and sustainability",
+                "Content": "competition, predator-prey, sustainable management"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "Chemistry": {
+    "Title": "OCR A-Level Chemistry (H432)",
+    "Modules": [
+      {
+        "Name": "Module 1",
+        "Title": "Practical Skills in Chemistry",
+        "Topics": [
+          {
+            "Title": "Planning",
+            "Content": ""
+          },
+          {
+            "Title": "Implementing",
+            "Content": ""
+          },
+          {
+            "Title": "Analysis",
+            "Content": ""
+          },
+          {
+            "Title": "Evaluation",
+            "Content": ""
+          }
+        ]
+      },
+      {
+        "Name": "Module 2",
+        "Title": "Foundations in Chemistry",
+        "Topics": [
+          {
+            "Title": "Atoms, compounds, molecules, and equations",
+            "Content": "Basic concepts and equations"
+          },
+          {
+            "Title": "Amount of substance",
+            "Content": "moles, Avogadro's constant, gas volume calculations"
+          },
+          {
+            "Title": "Acid-base reactions",
+            "Content": "Basic acid-base chemistry"
+          },
+          {
+            "Title": "Redox reactions",
+            "Content": "Oxidation and reduction"
+          },
+          {
+            "Title": "Electron structure",
+            "Content": "Atomic structure and electron configuration"
+          },
+          {
+            "Title": "Bonding and structure",
+            "Content": "ionic, covalent, metallic bonding, intermolecular forces"
+          }
+        ]
+      },
+      {
+        "Name": "Module 3",
+        "Title": "Periodic Table and Energy",
+        "Topics": [
+          {
+            "Title": "Periodicity",
+            "Content": "Periodic trends and properties"
+          },
+          {
+            "Title": "Group 2",
+            "Content": "alkaline earth metals"
+          },
+          {
+            "Title": "Group 7",
+            "Content": "halogens"
+          },
+          {
+            "Title": "Qualitative analysis",
+            "Content": "Analysis techniques"
+          },
+          {
+            "Title": "Enthalpy changes and calorimetry",
+            "Content": "Energy changes in reactions"
+          },
+          {
+            "Title": "Reaction rates and catalysts",
+            "Content": "Kinetics fundamentals"
+          },
+          {
+            "Title": "Chemical equilibrium",
+            "Content": "Basic equilibrium concepts"
+          }
+        ]
+      },
+      {
+        "Name": "Module 4",
+        "Title": "Core Organic Chemistry",
+        "Topics": [
+          {
+            "Title": "Basic concepts of organic chemistry",
+            "Content": "nomenclature, functional groups, isomerism"
+          },
+          {
+            "Title": "Alkanes",
+            "Content": "structure, properties, combustion, free radical substitution"
+          },
+          {
+            "Title": "Alkenes",
+            "Content": "structure, electrophilic addition, polymerization"
+          },
+          {
+            "Title": "Alcohols",
+            "Content": "oxidation, dehydration, esterification"
+          },
+          {
+            "Title": "Haloalkanes",
+            "Content": "nucleophilic substitution, hydrolysis"
+          },
+          {
+            "Title": "Organic synthesis pathways",
+            "Content": "Synthesis routes"
+          },
+          {
+            "Title": "Spectroscopy",
+            "Content": "Infrared (IR) and mass spectrometry (MS)"
+          }
+        ]
+      },
+      {
+        "Name": "Module 5",
+        "Title": "Physical Chemistry and Transition Elements",
+        "Topics": [
+          {
+            "Title": "Reaction rates",
+            "Content": "rate equations, orders of reaction, rate-determining step"
+          },
+          {
+            "Title": "Equilibrium",
+            "Content": "Kc, Kp, Le Chatelier's principle"
+          },
+          {
+            "Title": "Acids, bases, and buffers",
+            "Content": "pH calculations, titration curves"
+          },
+          {
+            "Title": "Thermodynamics",
+            "Content": "Enthalpy, entropy, and Gibbs free energy"
+          },
+          {
+            "Title": "Redox and electrode potentials",
+            "Content": "Electrochemistry"
+          },
+          {
+            "Title": "Transition elements",
+            "Content": "complex ions, oxidation states, precipitation reactions"
+          }
+        ]
+      },
+      {
+        "Name": "Module 6",
+        "Title": "Organic Chemistry and Analysis",
+        "Topics": [
+          {
+            "Title": "Aromatic compounds",
+            "Content": "benzene, electrophilic substitution"
+          },
+          {
+            "Title": "Carbonyl compounds",
+            "Content": "aldehydes, ketones, nucleophilic addition"
+          },
+          {
+            "Title": "Carboxylic acids and esters",
+            "Content": "acid reactions, esterification"
+          },
+          {
+            "Title": "Amines",
+            "Content": "bases, synthesis"
+          },
+          {
+            "Title": "Biological chemistry",
+            "Content": "Amino acids, proteins, and DNA"
+          },
+          {
+            "Title": "Advanced analysis",
+            "Content": "Chromatography and NMR spectroscopy"
+          },
+          {
+            "Title": "Polymer chemistry",
+            "Content": "Polymer synthesis and properties"
+          }
+        ]
+      }
+    ]
+  },
+  "Psychology": {
+    "Title": "AQA A-Level Psychology (7182)",
+    "Papers": [
+      {
+        "Name": "Paper 1",
+        "Title": "Introductory Topics in Psychology",
+        "Topics": [
+          {
+            "Title": "Social Influence",
+            "Content": [
+              "Types of conformity (compliance, identification, internalisation)",
+              "Explanations for conformity (ISI and NSI)",
+              "Asch's research on conformity",
+              "Zimbardo's Stanford Prison Experiment",
+              "Milgram's research on obedience",
+              "Agentic state and legitimacy of authority",
+              "Resistance to social influence",
+              "Minority influence and social change"
+            ]
+          },
+          {
+            "Title": "Memory",
+            "Content": [
+              "Multi-store model of memory (MSM)",
+              "Working memory model (WMM)",
+              "Types of long-term memory (episodic, procedural, semantic)",
+              "Forgetting (interference, retrieval failure)",
+              "Eyewitness testimony (misleading information, anxiety)",
+              "Cognitive interview"
+            ]
+          },
+          {
+            "Title": "Attachment",
+            "Content": [
+              "Caregiver-infant interactions",
+              "Schaffer's stages of attachment",
+              "Animal studies of attachment (Lorenz, Harlow)",
+              "Learning theory vs. Bowlby's monotropic theory",
+              "Ainsworth's Strange Situation",
+              "Cultural variations in attachment",
+              "Bowlby's maternal deprivation hypothesis",
+              "Effects of institutionalisation"
+            ]
+          },
+          {
+            "Title": "Psychopathology",
+            "Content": [
+              "Definitions of abnormality",
+              "Characteristics of phobias, depression, OCD",
+              "Behavioural, cognitive, and biological explanations of disorders",
+              "Treatments (systematic desensitisation, CBT, drug therapy)"
+            ]
+          }
+        ]
+      },
+      {
+        "Name": "Paper 2",
+        "Title": "Psychology in Context",
+        "Topics": [
+          {
+            "Title": "Approaches in Psychology",
+            "Content": [
+              "Origins of psychology (Wundt)",
+              "Behaviourist approach",
+              "Social learning theory",
+              "Cognitive approach",
+              "Biological approach",
+              "Psychodynamic approach (Freud)",
+              "Humanistic approach"
+            ]
+          },
+          {
+            "Title": "Biopsychology",
+            "Content": [
+              "Nervous system and endocrine system",
+              "Fight or flight response",
+              "Localisation of function in the brain",
+              "Plasticity and functional recovery",
+              "Biological rhythms (circadian, infradian, ultradian)"
+            ]
+          },
+          {
+            "Title": "Research Methods",
+            "Content": [
+              "Experimental methods",
+              "Correlations, observations, self-report",
+              "Ethics in psychological research",
+              "Statistical tests (chi-square, t-test, Mann-Whitney)"
+            ]
+          }
+        ]
+      },
+      {
+        "Name": "Paper 3",
+        "Title": "Issues and Options in Psychology",
+        "Topics": [
+          {
+            "Title": "Issues and Debates in Psychology",
+            "Content": [
+              "Gender and culture bias",
+              "Free will vs. determinism",
+              "Nature vs. nurture",
+              "Holism vs. reductionism",
+              "Idiographic vs. nomothetic approach",
+              "Ethical implications and social sensitivity"
+            ]
+          },
+          {
+            "Title": "Relationships",
+            "Content": [
+              "Evolutionary explanations of partner preference (sexual selection)",
+              "Factors affecting attraction (self-disclosure, physical attractiveness, filter theory)",
+              "Theories of romantic relationships (social exchange theory, equity theory, Rusbult's investment model)",
+              "Duck's phase model of relationship breakdown",
+              "Virtual relationships in social media",
+              "Parasocial relationships (celebrity worship, absorption-addiction model, attachment theory)"
+            ]
+          },
+          {
+            "Title": "Schizophrenia",
+            "Content": [
+              "Classification of schizophrenia (ICD-10, DSM-5, reliability and validity issues)",
+              "Biological explanations (genetics, dopamine hypothesis, neural correlates)",
+              "Psychological explanations (family dysfunction, cognitive explanations)",
+              "Drug therapy (typical and atypical antipsychotics)",
+              "Psychological therapies (CBT, family therapy, token economies)",
+              "The interactionist approach (diathesis-stress model)"
+            ]
+          },
+          {
+            "Title": "Forensic Psychology",
+            "Content": [
+              "Defining and measuring crime",
+              "Offender profiling (top-down and bottom-up approaches)",
+              "Biological explanations (atavistic form, genetic and neural explanations)",
+              "Psychological explanations (Eysenck's theory, cognitive explanations, differential association theory, psychodynamic explanations)",
+              "Dealing with offending behaviour (custodial sentencing, behaviour modification, anger management, restorative justice)"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

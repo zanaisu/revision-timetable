@@ -1,0 +1,39 @@
+<div class="col-md-6">
+    <h3>Tasks</h3>
+    <h4 id="current-day"></h4>
+    <div id="timetable-container">
+        {% for day, tasks in timetable.items() %}
+            <div class="day-tasks" id="tasks-{{ day }}">
+                <ul class="list-group">
+                    {% for task in tasks %}
+                        <li class="list-group-item">
+                            {{ task }}
+                            {% if 'Chemistry' in task %}
+                                <a href="https://web.uplearn.co.uk/learn/chemistry-ocr-2" 
+                                   class="uplearn-quick-link" target="_blank">
+                                   <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            {% elif 'Biology (Y13)' in task %}
+                                <a href="https://web.uplearn.co.uk/learn/biology-ocr-2" 
+                                   class="uplearn-quick-link" target="_blank">
+                                   <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            {% elif 'Biology (Y12)' in task %}
+                                <a href="https://web.uplearn.co.uk/learn/biology-ocr-1" 
+                                   class="uplearn-quick-link" target="_blank">
+                                   <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            {% elif 'Psychology' in task %}
+                                <a href="https://classroom.google.com/" 
+                                   class="uplearn-quick-link" target="_blank">
+                                   <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+    <button class="btn btn-primary mt-3" onclick="openCalendarView()">View Full Calendar</button>
+</div>
