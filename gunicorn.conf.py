@@ -18,7 +18,7 @@ errorlog = "-"
 loglevel = "info"
 
 # Process naming
-proc_name = "revision_timetable"
+proc_name = "RevisionTimetable"
 
 # SSL/TLS settings (if needed)
 # keyfile = "/path/to/keyfile"
