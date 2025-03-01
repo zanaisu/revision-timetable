@@ -1,0 +1,112 @@
+<div class="calendar-container">
+    <div class="calendar-grid">
+        {% for week in calendar_data %}
+        <div class="week-card">
+            <div class="week-header">
+                <i class="fas fa-calendar-week mr-2"></i> Week {{ week.week_number }}
+                <div class="text-muted mt-1" style="font-size: 0.8rem;">
+                    {{ week.start_date|format_date('%b %d') }} - 
+                    {{ week.end_date|format_date('%b %d') }}
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Exams in this week -->
+                {% if week.exams %}
+                <div class="exams-this-week mb-3">
+                    <h6 class="font-weight-bold text-danger"><i class="fas fa-calendar-check mr-1"></i> Exams This Week</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for exam in week.exams %}
+                        <li class="list-group-item py-2 px-3 exam-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><strong>{{ exam.subject }}:</strong> {{ exam.exam }}</span>
+                                <span class="badge badge-danger">{{ exam.date|days_until }} days</span>
+                            </div>
+                            <small class="text-muted">{{ exam.topics }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <!-- Daily tasks view -->
+                <div class="daily-breakdown mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <h6 class="font-weight-bold"><i class="fas fa-tasks mr-1"></i> Daily Tasks</h6>
+                    </div>
+                    
+                    <div class="day-grid">
+                        {% for day in week.days %}
+                            <div class="day-card {% if day.day_name == 'Saturday' or day.day_name == 'Sunday' %}weekend{% endif %} {% if day.exams %}has-exam{% endif %}">
+                                <div class="day-header">
+                                    {{ day.day_name }} <small>{{ day.date|format_date('%d %b') }}</small>
+                                    {% if day.exams %}
+                                    <div class="exam-marker" title="Exam: {{ day.exams[0].subject }} {{ day.exams[0].exam }}">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% if day.tasks %}
+                                <ul class="list-group list-group-flush day-tasks-list">
+                                    {% for task in day.tasks %}
+                                    <li class="list-group-item py-1 px-2">
+                                        <small>{{ task }}</small>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% else %}
+                                <div class="text-center text-muted py-2">
+                                    <small><i class="fas fa-info-circle mr-1"></i> No tasks</small>
+                                </div>
+                                {% endif %}
+                                
+                                {% if day.exams %}
+                                <div class="day-exams">
+                                    {% for exam in day.exams %}
+                                    <div class="exam-tag" data-subject="{{ exam.subject }}">
+                                        {{ exam.subject }} {{ exam.exam }}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Subject breakdown view -->
+                {% for subject, data in week.subjects.items() %}
+                <div class="subject-section" id="subject-{{ subject|lower }}">
+                    <div class="subject-title d-flex justify-content-between align-items-center">
+                        <span>{{ subject.replace('_', ' ') }}</span>
+                        {% if data.next_exam %}
+                        <span class="badge {% if data.end_date|days_until < 30 %}badge-danger{% elif data.end_date|days_until < 60 %}badge-warning{% else %}badge-info{% endif %}">
+                            {{ data.end_date|days_until }} days until {{ data.next_exam.paper }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <ul class="list-group list-group-flush mt-2">
+                        {% for task in data.tasks %}
+                        <li class="list-group-item py-2 px-3">
+                            <i class="fas fa-tasks mr-2 text-muted"></i> {{ task }}
+                        </li>
+                        {% endfor %}
+                        {% if not data.tasks %}
+                        <li class="list-group-item py-2 px-3 text-muted">
+                            <i class="fas fa-info-circle mr-2"></i> No scheduled tasks
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endfor %}
+                
+                {% if not week.subjects %}
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-check-circle fa-3x mb-3"></i>
+                    <p>All exams completed!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

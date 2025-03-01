@@ -1,33 +1,1678 @@
+/* Main Theme Variables */
+
 :root {
-    --bg-color: #ffffff;
-    --text-color: #333333;
-    --card-bg: #f8f9fa;
+
+  /* Common colors that don't change between themes */
+
+  --success-color: #28a745;
+
+  --info-color: #17a2b8;
+
+  --warning-color: #ffc107;
+
+  --danger-color: #dc3545;
+
+  
+
+  /* Typography */
+
+  --font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+
+  
+
+  /* Transitions */
+
+  --transition-speed: 0.3s;
+
+  
+
+  /* Default Light Theme */
+
+  --primary-color: #4361ee;
+
+  --primary-hover: #3046c7;
+
+  --secondary-color: #6c757d;
+
+  --bg-color: #f5f5f0;
+
+  --text-color: #333333;
+
+  --card-bg: #ffffff;
+
+  --border-color: #dee2e6;
+
+  --panel-bg: #f8f9fa;
+
+  --header-bg: #f0f0e8;
+
+  --sidebar-bg: #ffffff;
+
+  --card-header-bg: #f8f9fa;
+
+  --input-bg: #ffffff;
+
+  --input-color: #333333;
+
+  --shadow-color: rgba(0, 0, 0, 0.1);
+
 }
+
+
+
+/* Dark Theme */
 
 [data-theme="dark"] {
-    --bg-color: #333333;
-    --text-color: #ffffff;
-    --card-bg: #444444;
+
+  --primary-color: #5b7dff;
+
+  --primary-hover: #7b91ff;
+
+  --secondary-color: #adb5bd;
+
+  --bg-color: #222222;
+
+  --text-color: #f0f0f0;
+
+  --card-bg: #333333;
+
+  --border-color: #444444;
+
+  --panel-bg: #333333;
+
+  --header-bg: #2b2b2b;
+
+  --sidebar-bg: #333333;
+
+  --card-header-bg: #393939;
+
+  --input-bg: #2c2c2c;
+
+  --input-color: #f0f0f0;
+
+  --shadow-color: rgba(0, 0, 0, 0.3);
+
 }
+
+
+
+/* Kimbie Dark Theme - Based on VS Code's Kimbie Dark theme - warm earthy tones */
+
+[data-theme="kimono"] {
+
+  --primary-color: #D3AF86;
+
+  --primary-hover: #C09B6F;
+
+  --secondary-color: #98676A;
+
+  --bg-color: #221A0F;
+
+  --text-color: #DED7CA;
+
+  --card-bg: #362712;
+
+  --border-color: #51412C;
+
+  --panel-bg: #43301D;
+
+  --header-bg: #392A1C;
+
+  --sidebar-bg: #221A0F;
+
+  --card-header-bg: #51412C;
+
+  --input-bg: #43301D;
+
+  --input-color: #DED7CA;
+
+  --shadow-color: rgba(0, 0, 0, 0.3);
+
+  --success-color: #889B4A;
+
+  --info-color: #8AB1B0;
+
+  --warning-color: #D3AF86;
+
+  --danger-color: #DC3958;
+
+}
+
+
+
+/* Calm Theme - Soft blues and gentle colors for a serene experience */
+
+[data-theme="calm"] {
+
+  --primary-color: #68A7AD;
+
+  --primary-hover: #5A969D;
+
+  --secondary-color: #5A7B86;
+
+  --bg-color: #F8F9FA;
+
+  --text-color: #2C3E47;
+
+  --card-bg: #FFFFFF;
+
+  --border-color: #E8E8E8;
+
+  --panel-bg: #F0F6F6;
+
+  --header-bg: #E8F0F0;
+
+  --sidebar-bg: #68A7AD;
+
+  --card-header-bg: #68A7AD;
+
+  --input-bg: #FFFFFF;
+
+  --input-color: #2C3E47;
+
+  --shadow-color: rgba(104, 167, 173, 0.2);
+
+  --success-color: #5B966C;
+
+  --info-color: #5789AF;
+
+  --warning-color: #C9A83D;
+
+  --danger-color: #C1544A;
+
+}
+
+
+
+/* Forest Theme - Earth tones, greens and browns for a natural look */
+
+[data-theme="forest"] {
+
+  --primary-color: #2D6A4F;
+
+  --primary-hover: #245541;
+
+  --secondary-color: #4D7254;
+
+  --bg-color: #F7F5EB;
+
+  --text-color: #293028;
+
+  --card-bg: #FFFFFF;
+
+  --border-color: #E0D9C5;
+
+  --panel-bg: #EFE9D9;
+
+  --header-bg: #E5DFC5;
+
+  --sidebar-bg: #2D6A4F;
+
+  --card-header-bg: #2D6A4F;
+
+  --input-bg: #FFFFFF;
+
+  --input-color: #293028;
+
+  --shadow-color: rgba(45, 106, 79, 0.15);
+
+  --success-color: #2D6A4F;
+
+  --info-color: #46725E;
+
+  --warning-color: #BA9F33;
+
+  --danger-color: #A54834;
+
+}
+
+
+
+/* Neon Theme - Vibrant, high-contrast colors for a modern look */
+
+[data-theme="neon"] {
+
+  --primary-color: #8A00FC;
+
+  --primary-hover: #7400D3;
+
+  --secondary-color: #00C2FF;
+
+  --bg-color: #0F0F1A;
+
+  --text-color: #EEEEFF;
+
+  --card-bg: #1F1F2C;
+
+  --border-color: #333355;
+
+  --panel-bg: #2A2A3A;
+
+  --header-bg: #252536;
+
+  --sidebar-bg: #1A1A25;
+
+  --card-header-bg: #8A00FC;
+
+  --input-bg: #2A2A3A;
+
+  --input-color: #EEEEFF;
+
+  --shadow-color: rgba(138, 0, 252, 0.3);
+
+  --success-color: #00FE9B;
+
+  --info-color: #00C2FF;
+
+  --warning-color: #FCF900;
+
+  --danger-color: #FF013C;
+
+}
+
+
+
+/* Base Styles */
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+
+  background-color: var(--bg-color);
+
+  color: var(--text-color);
+
+  font-family: var(--font-family);
+
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+
+  margin: 0;
+
+  padding: 0;
+
+  min-height: 100vh;
+
 }
+
+
+
+/* Layout */
+
+.main-container {
+
+  transition: margin-left var(--transition-speed);
+
+  padding: 20px;
+
+  padding-top: 70px; /* Account for header */
+
+}
+
+
+
+/* Main content with sidebar open */
+
+.sidebar-open .main-container {
+
+  margin-left: 250px;
+
+}
+
+
+
+/* Sidebar */
+
+.sidebar {
+
+  position: fixed;
+
+  height: 100vh;
+
+  width: 250px;
+
+  background: var(--sidebar-bg);
+
+  border-right: 1px solid var(--border-color);
+
+  z-index: 1030;
+
+  transition: transform var(--transition-speed);
+
+  overflow-y: auto;
+
+  left: 0;
+
+  top: 0;
+
+  box-shadow: 2px 0 8px var(--shadow-color);
+
+}
+
+
+
+.sidebar-collapsed {
+
+  transform: translateX(-200px);
+
+}
+
+
+
+.sidebar-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 15px;
+
+  background: var(--header-bg);
+
+  border-bottom: 1px solid var(--border-color);
+
+}
+
+
+
+.sidebar-content {
+
+  padding: 15px;
+
+}
+
+
+
+.sidebar-section {
+
+  margin-bottom: 25px;
+
+}
+
+
+
+.sidebar-section h5 {
+
+  font-size: 0.9rem;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+
+  color: var(--secondary-color);
+
+  margin-bottom: 10px;
+
+  padding-bottom: 5px;
+
+  border-bottom: 1px solid var(--border-color);
+
+}
+
+
+
+.sidebar-toggle {
+
+  width: 40px;
+
+  height: 40px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  color: var(--text-color);
+
+  font-size: 1.2rem;
+
+}
+
+
+
+.sidebar-mini {
+
+  position: fixed;
+
+  left: 0;
+
+  top: 0;
+
+  width: 50px;
+
+  height: 100vh;
+
+  background: var(--sidebar-bg);
+
+  border-right: 1px solid var(--border-color);
+
+  z-index: 1020;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  padding-top: 70px;
+
+  transition: opacity var(--transition-speed);
+
+}
+
+
+
+.sidebar-mini.hidden {
+
+  opacity: 0;
+
+  pointer-events: none;
+
+}
+
+
+
+.sidebar-open .sidebar-mini {
+
+  opacity: 0;
+
+  pointer-events: none;
+
+}
+
+
+
+.mini-button {
+
+  width: 36px;
+
+  height: 36px;
+
+  border-radius: 6px;
+
+  border: 1px solid var(--border-color);
+
+  background: var(--card-bg);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 10px;
+
+  cursor: pointer;
+
+  color: var(--text-color);
+
+  transition: background-color 0.2s, transform 0.2s;
+
+}
+
+
+
+.mini-button:hover {
+
+  background: var(--panel-bg);
+
+  transform: translateX(3px);
+
+}
+
+
+
+.mini-button.primary {
+
+  color: var(--primary-color);
+
+}
+
+
+
+.mini-button.success {
+
+  color: var(--success-color);
+
+}
+
+
+
+.mini-button.info {
+
+  color: var(--info-color);
+
+}
+
+
+
+.mini-button.warning {
+
+  color: var(--warning-color);
+
+}
+
+
+
+.mini-button.danger {
+
+  color: var(--danger-color);
+
+}
+
+
+
+/* Header */
+
+.main-header {
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+  right: 0;
+
+  height: 60px;
+
+  background: var(--header-bg);
+
+  border-bottom: 1px solid var(--border-color);
+
+  z-index: 1025;
+
+  display: flex;
+
+  align-items: center;
+
+  padding: 0 15px;
+
+  transition: left var(--transition-speed);
+
+}
+
+
+
+.sidebar-open .main-header {
+
+  left: 250px;
+
+}
+
+
+
+/* Theme toggle */
+
+.theme-toggle {
+
+  position: fixed;
+
+  top: 15px;
+
+  right: 15px;
+
+  z-index: 1050;
+
+  width: 40px;
+
+  height: 40px;
+
+  border-radius: 50%;
+
+  background: var(--card-bg);
+
+  border: 1px solid var(--border-color);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  color: var(--text-color);
+
+  transition: background 0.2s;
+
+}
+
+
+
+.theme-toggle:hover {
+
+  background: var(--panel-bg);
+
+}
+
+
+
+/* Cards */
 
 .card {
-    background-color: var(--card-bg);
+
+  background-color: var(--card-bg);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 8px;
+
+  box-shadow: 0 2px 4px var(--shadow-color);
+
+  margin-bottom: 20px;
+
+  transition: box-shadow 0.3s, border-color 0.3s, background-color 0.3s;
+
 }
 
-.dark-mode-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 10px;
-    border-radius: 50%;
-    border: none;
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    cursor: pointer;
+
+
+.card:hover {
+
+  box-shadow: 0 4px 8px var(--shadow-color);
+
+}
+
+
+
+.card-header {
+
+  padding: 15px 20px;
+
+  background-color: var(--card-header-bg);
+
+  border-bottom: 1px solid var(--border-color);
+
+  font-weight: 600;
+
+  color: var(--text-color);
+
+}
+
+
+
+.card-body {
+
+  padding: 20px;
+
+}
+
+
+
+/* Tasks */
+
+.task-card {
+
+  transition: transform 0.2s;
+
+}
+
+
+
+.task-card:hover {
+
+  transform: translateY(-3px);
+
+}
+
+
+
+.task-footer {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-top: 15px;
+
+}
+
+
+
+/* Badge styling */
+
+.badge {
+
+  padding: 5px 10px;
+
+  border-radius: 4px;
+
+  font-size: 0.75rem;
+
+  font-weight: 600;
+
+  /* Make sure badge text is always readable */
+
+  color: white !important;
+
+}
+
+
+
+.badge-primary {
+
+  background-color: var(--primary-color);
+
+}
+
+
+
+.badge-info {
+
+  background-color: var(--info-color);
+
+}
+
+
+
+.badge-success {
+
+  background-color: var(--success-color);
+
+}
+
+
+
+.badge-warning {
+
+  background-color: var(--warning-color);
+
+  color: var(--text-color) !important;
+
+}
+
+
+
+.badge-danger {
+
+  background-color: var(--danger-color);
+
+}
+
+
+
+/* Uplearn links */
+
+.uplearn-link {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 4px 10px;
+
+  border: 1px solid var(--primary-color);
+
+  color: var(--primary-color);
+
+  border-radius: 4px;
+
+  font-size: 0.8rem;
+
+  text-decoration: none;
+
+  transition: background 0.2s, color 0.2s;
+
+}
+
+
+
+.uplearn-link:hover {
+
+  background: var(--primary-color);
+
+  color: white;
+
+  text-decoration: none;
+
+}
+
+
+
+/* Progress tracking */
+
+.progress {
+
+  height: 8px;
+
+  border-radius: 4px;
+
+  margin-bottom: 15px;
+
+  background-color: var(--panel-bg);
+
+}
+
+
+
+.progress-bar {
+
+  background-color: var(--primary-color);
+
+}
+
+
+
+/* Calendar styling */
+
+.calendar-modal {
+
+  max-width: 90%;
+
+  max-height: 90vh;
+
+  background: var(--card-bg);
+
+  border-radius: 12px;
+
+  padding: 20px;
+
+  overflow-y: auto;
+
+  box-shadow: 0 5px 15px var(--shadow-color);
+
+}
+
+
+
+.week-card {
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  background-color: var(--card-bg);
+
+}
+
+
+
+.week-header {
+
+  background: var(--panel-bg);
+
+  padding: 10px;
+
+  font-weight: bold;
+
+  border-bottom: 1px solid var(--border-color);
+
+}
+
+
+
+.subject-title {
+
+  padding: 5px 10px;
+
+  background: var(--header-bg);
+
+  border-radius: 4px;
+
+  margin-bottom: 8px;
+
+}
+
+
+
+/* Forms */
+
+.form-control {
+
+  background-color: var(--input-bg);
+
+  border: 1px solid var(--border-color);
+
+  color: var(--input-color);
+
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+}
+
+
+
+.form-control:focus {
+
+  border-color: var(--primary-color);
+
+  box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+
+  background-color: var(--input-bg);
+
+  color: var(--input-color);
+
+}
+
+
+
+.input-group-text {
+
+  background-color: var(--panel-bg);
+
+  border: 1px solid var(--border-color);
+
+  color: var(--text-color);
+
+}
+
+
+
+/* Buttons */
+
+.btn {
+
+  border-radius: 5px;
+
+  padding: 0.5rem 1rem;
+
+  font-weight: 500;
+
+  transition: all 0.2s;
+
+}
+
+
+
+.btn-primary {
+
+  background-color: var(--primary-color);
+
+  border-color: var(--primary-color);
+
+  color: white;
+
+}
+
+
+
+.btn-primary:hover {
+
+  background-color: var(--primary-hover);
+
+  border-color: var(--primary-hover);
+
+}
+
+
+
+.btn-outline-primary {
+
+  color: var(--primary-color);
+
+  border-color: var(--primary-color);
+
+}
+
+
+
+.btn-outline-primary:hover {
+
+  background-color: var(--primary-color);
+
+  color: white;
+
+}
+
+
+
+.btn-secondary {
+
+  background-color: var(--secondary-color);
+
+  border-color: var(--secondary-color);
+
+}
+
+
+
+.btn-light {
+
+  background-color: var(--panel-bg);
+
+  border-color: var(--border-color);
+
+  color: var(--text-color);
+
+}
+
+
+
+.btn-light:hover {
+
+  background-color: var(--panel-bg);
+
+  border-color: var(--border-color);
+
+}
+
+
+
+/* Modal overlay */
+
+.modal-overlay {
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+  right: 0;
+
+  bottom: 0;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  z-index: 1040;
+
+}
+
+
+
+/* Responsiveness */
+
+@media (max-width: 768px) {
+
+  .sidebar-open .main-container {
+
+    margin-left: 0;
+
+  }
+
+  
+
+  .sidebar {
+
+    width: 100%;
+
+    transform: translateX(-100%);
+
+  }
+
+  
+
+  .sidebar-collapsed {
+
+    transform: translateX(-100%);
+
+  }
+
+  
+
+  .sidebar-open .sidebar {
+
+    transform: translateX(0);
+
+  }
+
+  
+
+  .main-header {
+
+    left: 0;
+
+  }
+
+  
+
+  .sidebar-open .main-header {
+
+    left: 0;
+
+  }
+
+}
+
+
+
+/* Notification badge */
+
+.notif-badge {
+
+  position: absolute;
+
+  top: -5px;
+
+  right: -5px;
+
+  width: 18px;
+
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: var(--danger-color);
+
+  color: white;
+
+  font-size: 0.7rem;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+
+/* Theme selector */
+
+.theme-selector {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-top: 10px;
+
+  margin-bottom: 15px;
+
+}
+
+
+
+.theme-option {
+
+  width: 36px;
+
+  height: 36px;
+
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  border: 2px solid transparent;
+
+  box-shadow: 0 2px 4px var(--shadow-color);
+
+  transition: transform 0.2s, border-color 0.2s;
+
+}
+
+
+
+.theme-option:hover {
+
+  transform: scale(1.1);
+
+}
+
+
+
+.theme-option.active {
+
+  border-color: var(--text-color);
+
+}
+
+
+
+.theme-light {
+
+  background: linear-gradient(135deg, #f5f5f0 0%, #ffffff 100%);
+
+}
+
+
+
+.theme-dark {
+
+  background: linear-gradient(135deg, #222222 0%, #333333 100%);
+
+}
+
+
+
+.theme-kimono {
+
+  background: linear-gradient(135deg, #D3AF86 0%, #362712 50%, #221A0F 100%);
+
+}
+
+
+
+.theme-calm {
+
+  background: linear-gradient(135deg, #68A7AD 0%, #F8F9FA 100%);
+
+}
+
+
+
+.theme-forest {
+
+  background: linear-gradient(135deg, #2D6A4F 0%, #F7F5EB 100%);
+
+}
+
+
+
+.theme-neon {
+
+  background: linear-gradient(135deg, #8A00FC 0%, #0F0F1A 100%);
+
+}
+
+
+
+/* Exam Countdown styles */
+
+.list-group-item {
+
+  background-color: var(--card-bg);
+
+  color: var(--text-color);
+
+  border-color: var(--border-color);
+
+}
+
+
+
+/* Utility classes */
+
+.mb-4 {
+
+  margin-bottom: 1.5rem;
+
+}
+
+
+
+.mt-3 {
+
+  margin-top: 1rem;
+
+}
+
+
+
+.rounded {
+
+  border-radius: 0.25rem;
+
+}
+/* Fix for navigation text contrast in custom themes */
+[data-theme="calm"] .sidebar .btn-outline-primary,
+[data-theme="forest"] .sidebar .btn-outline-primary {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="calm"] .sidebar .btn-outline-primary:hover,
+[data-theme="forest"] .sidebar .btn-outline-primary:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+[data-theme="calm"] .card-header,
+[data-theme="forest"] .card-header {
+  color: #ffffff;
+}
+
+/* Calendar with daily tasks */
+.day-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.day-card {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 0.8rem;
+  background-color: var(--card-bg);
+}
+
+.day-card.weekend {
+  background-color: var(--panel-bg);
+}
+
+.day-header {
+  background: var(--header-bg);
+  padding: 5px;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.7rem;
+}
+
+.day-tasks-list li {
+  font-size: 0.7rem;
+  padding: 5px \!important;
+}
+
+/* Compact calendar for dashboard */
+.compact-calendar {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px;
+  background: var(--panel-bg);
+}
+
+.compact-week {
+  margin-bottom: 10px;
+}
+
+.compact-week-header {
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.day-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.day-card-compact {
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  text-align: center;
+}
+
+.day-card-compact.weekend {
+  background-color: var(--panel-bg);
+}
+
+.day-header-compact {
+  font-size: 0.65rem;
+  font-weight: bold;
+  padding: 3px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.task-count {
+  padding: 5px 2px;
+}
+
+.task-count .badge {
+  font-size: 0.65rem;
+  padding: 3px 5px;
+}
+
+.subject-exams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+/* Exam styling */
+.day-card.has-exam {
+  border-color: var(--danger-color);
+  position: relative;
+  cursor: pointer;
+}
+
+.day-card.has-exam:hover {
+  box-shadow: 0 0 5px var(--danger-color);
+}
+
+.exam-marker {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--danger-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: white;
+}
+
+.exam-marker-compact {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--danger-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  color: white;
+}
+
+.exam-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  padding: 2px 4px;
+  background-color: var(--danger-color);
+  color: white;
+  border-radius: 3px;
+  margin-top: 3px;
+}
+
+.exam-tag-compact {
+  text-align: center;
+  margin-top: 2px;
+}
+
+.day-exams {
+  padding: 3px;
+  border-top: 1px solid var(--border-color);
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.exams-this-week {
+  border: 1px solid var(--danger-color);
+  border-radius: 6px;
+  padding: 10px;
+  background-color: rgba(220, 53, 69, 0.05);
+}
+
+.exam-item {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.exam-item:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.highlight-exam {
+  box-shadow: 0 0 8px var(--danger-color);
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+.highlight-section {
+  box-shadow: 0 0 12px var(--primary-color);
+  border-color: var(--primary-color);
+  animation: pulse 1s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Progress Log Styles */
+.task-log-list,
+.uplearn-log-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.task-log-item,
+.uplearn-log-item {
+  background-color: var(--card-bg);
+  border-radius: 6px;
+  transition: transform 0.2s;
+}
+
+.task-log-item:hover,
+.uplearn-log-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.bg-info-subtle {
+  background-color: rgba(23, 162, 184, 0.2);
+  color: var(--text-color);
+}
+
+.bg-success-subtle {
+  background-color: rgba(40, 167, 69, 0.2);
+  color: var(--text-color);
+}
+
+.bg-warning-subtle {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: var(--text-color);
+}
+
+.bg-danger-subtle {
+  background-color: rgba(220, 53, 69, 0.2);
+  color: var(--text-color);
+}
+
+/* Star and Brain icons for ratings */
+.fas.fa-star, 
+.far.fa-star {
+  font-size: 0.75rem;
+}
+
+.fas.fa-brain, 
+.far.fa-brain {
+  font-size: 0.75rem;
+}
+
+.text-warning {
+  color: var(--warning-color) !important;
+}
+
+.text-info {
+  color: var(--info-color) !important;
+}
+
+/* Progress indicators */
+.progress {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar.bg-success {
+  background-color: var(--success-color) !important;
+}
+
+/* Dark mode adjustments */
+body.dark-mode .bg-info-subtle {
+  background-color: rgba(23, 162, 184, 0.3);
+}
+
+body.dark-mode .bg-success-subtle {
+  background-color: rgba(40, 167, 69, 0.3);
+}
+
+body.dark-mode .bg-warning-subtle {
+  background-color: rgba(255, 193, 7, 0.3);
+}
+
+body.dark-mode .bg-danger-subtle {
+  background-color: rgba(220, 53, 69, 0.3);
+}
+
+body.dark-mode .progress {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Stats and Charts */
+.chart-container {
+  position: relative;
+  height: 250px;
+}
+
+.stats-card {
+  transition: transform 0.2s;
+}
+
+.stats-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Task completion styles */
+.task-item.completed {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.task-item.completed::after {
+    content: "✓";
+    font-size: 3rem;
+    color: rgba(40, 167, 69, 0.3);  /* Semi-transparent green */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.task-item.completed .task-content {
+    opacity: 0.7;
+    text-decoration: line-through;
+    text-decoration-color: rgba(40, 167, 69, 0.6);
+    text-decoration-thickness: 2px;
+}
+
+.task-card.completed {
+    position: relative;
+    opacity: 0.8;
+}
+
+.task-card.completed::after {
+    content: "✓";
+    font-size: 4rem;
+    color: rgba(40, 167, 69, 0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.task-card.completed .card-body {
+    opacity: 0.7;
+}
+
+/* Task animation */
+@keyframes taskComplete {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.task-complete-animation {
+    animation: taskComplete 0.5s ease;
 }

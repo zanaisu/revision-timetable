@@ -2,38 +2,61 @@
     <h3>Tasks</h3>
     <h4 id="current-day"></h4>
     <div id="timetable-container">
-        {% for day, tasks in timetable.items() %}
-            <div class="day-tasks" id="tasks-{{ day }}">
-                <ul class="list-group">
-                    {% for task in tasks %}
-                        <li class="list-group-item">
-                            {{ task }}
-                            {% if 'Chemistry' in task %}
-                                <a href="https://web.uplearn.co.uk/learn/chemistry-ocr-2" 
-                                   class="uplearn-quick-link" target="_blank">
-                                   <i class="fas fa-external-link-alt"></i>
-                                </a>
-                            {% elif 'Biology (Y13)' in task %}
-                                <a href="https://web.uplearn.co.uk/learn/biology-ocr-2" 
-                                   class="uplearn-quick-link" target="_blank">
-                                   <i class="fas fa-external-link-alt"></i>
-                                </a>
-                            {% elif 'Biology (Y12)' in task %}
-                                <a href="https://web.uplearn.co.uk/learn/biology-ocr-1" 
-                                   class="uplearn-quick-link" target="_blank">
-                                   <i class="fas fa-external-link-alt"></i>
-                                </a>
-                            {% elif 'Psychology' in task %}
-                                <a href="https://classroom.google.com/" 
-                                   class="uplearn-quick-link" target="_blank">
-                                   <i class="fas fa-external-link-alt"></i>
-                                </a>
+        {% if daily_tasks %}
+            {% for task in daily_tasks %}
+                <div class="task-card mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title">{{ task.subject }}</h5>
+                                <span class="badge badge-primary">{{ task.duration }} mins</span>
+                            </div>
+                            <p class="card-text">{{ task.task }}</p>
+                            {% if task.type == 'Uplearn' %}
+                                {% set link = get_uplearn_link(task.subject) %}
+                                {% if link %}
+                                    <a href="{{ link }}" target="_blank" class="uplearn-quick-link">
+                                        <i class="fas fa-external-link-alt"></i> Open in Uplearn
+                                    </a>
+                                {% endif %}
                             {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endfor %}
+                            <div class="task-footer mt-2">
+                                <span class="badge badge-info">{{ task.type }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <!-- Fallback to timetable if no daily tasks -->
+            {% for day, tasks in timetable.items() %}
+                <div class="day-tasks" id="tasks-{{ day }}">
+                    <ul class="list-group">
+                        {% for task in tasks %}
+                            <li class="list-group-item">
+                                {{ task }}
+                                {% if 'Chemistry' in task %}
+                                    <a href="https://web.uplearn.co.uk/learn/chemistry-ocr-2" 
+                                       class="uplearn-quick-link" target="_blank">
+                                       <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                {% elif 'Biology (Y13)' in task %}
+                                    <a href="https://web.uplearn.co.uk/learn/biology-ocr-2" 
+                                       class="uplearn-quick-link" target="_blank">
+                                       <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                {% elif 'Biology (Y12)' in task %}
+                                    <a href="https://web.uplearn.co.uk/learn/biology-ocr-1" 
+                                       class="uplearn-quick-link" target="_blank">
+                                       <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
     <button class="btn btn-primary mt-3" onclick="openCalendarView()">View Full Calendar</button>
 </div>

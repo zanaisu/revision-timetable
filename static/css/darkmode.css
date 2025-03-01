@@ -1,0 +1,147 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --card-bg: #f8f9fa;
+    --border-color: #dee2e6;
+    --hover-bg: #e9ecef;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1a1a;
+        --text-color: #ffffff;
+        --card-bg: #2d2d2d;
+        --border-color: #404040;
+        --hover-bg: #3d3d3d;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+
+    .card {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+    }
+
+    .table {
+        color: var(--text-color);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: var(--hover-bg);
+    }
+
+    .nav-link {
+        color: #9eb8ff;
+    }
+
+    .nav-link:hover {
+        color: #c1d3ff;
+    }
+
+    .btn-outline-primary {
+        border-color: #9eb8ff;
+        color: #9eb8ff;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #9eb8ff;
+        color: var(--bg-color);
+    }
+
+    .form-control {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+        color: var(--text-color);
+    }
+
+    .form-control:focus {
+        background-color: var(--card-bg);
+        color: var(--text-color);
+    }
+
+    /* Exam Timeline Styles */
+    .timeline-container {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+    }
+
+    .timeline-item {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+    }
+
+    .timeline-item::before {
+        background-color: var(--border-color);
+    }
+
+    .timeline-dot {
+        background-color: var(--text-color);
+        border-color: var(--bg-color);
+    }
+
+    /* Exam Timeline Text Box Styles */
+    .timeline-item .exam-details {
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        border-color: var(--border-color);
+    }
+
+    .timeline-item .exam-title {
+        color: var(--text-color);
+    }
+
+    .timeline-item .exam-date {
+        color: #9eb8ff;
+    }
+
+    .timeline-item .exam-description {
+        color: var(--text-color);
+        opacity: 0.8;
+    }
+
+    /* Exam Countdown Styles */
+    .countdown-card {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+        color: var(--text-color);
+    }
+
+    .countdown-number {
+        color: #9eb8ff;
+    }
+
+    .countdown-label {
+        color: var(--text-color);
+    }
+
+    /* Progress bars and indicators */
+    .progress {
+        background-color: var(--border-color);
+    }
+
+    .progress-bar {
+        background-color: #9eb8ff;
+    }
+
+    /* Subject badges and tags */
+    .badge {
+        background-color: var(--hover-bg);
+        color: var(--text-color);
+    }
+
+    /* Alert and notification styles */
+    .alert {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+        color: var(--text-color);
+    }
+
+    .alert-primary {
+        background-color: rgba(158, 184, 255, 0.1);
+        border-color: #9eb8ff;
+        color: #c1d3ff;
+    }
+}

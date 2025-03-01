@@ -1,311 +1,233 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Curriculum Overview</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body { 
-            background: #f5f5f0;
-            min-height: 100vh;
-            padding-bottom: 40px; /* Add padding at bottom */
-        }
+{% extends "base.html" %}
 
-        /* Dark mode styles */
-        body.dark-mode {
-            background: #222;
-            color: #fff;
-        }
+{% block title %}Curriculum | Revision Timetable{% endblock %}
 
-        .header {
-            position: sticky;
-            top: 0;
-            background: #f0f0e8;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            border-bottom: 1px solid #dee2e6;
-            z-index: 1000;
-        }
+{% block header_title %}Curriculum{% endblock %}
 
-        .dark-mode .header {
-            background: #333;
-            border-color: #444;
-        }
-
-        .content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .card {
-            margin-bottom: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #dee2e6;
-        }
-
-        .dark-mode .card {
-            border-color: #444;
-            background: #333;
-        }
-
-        .card-header {
-            background: #4361ee;
-            color: white;
-            cursor: default;
-            padding: 15px 20px;
-        }
-
-        .year-title, .module-title {
-            background: #f0f0e8;
-            padding: 12px 15px;
-            margin: 10px -15px;
-            cursor: pointer;
-            border-left: 4px solid #4361ee;
-            position: relative;
-        }
-
-        .dark-mode .year-title,
-        .dark-mode .module-title {
-            background: #444;
-            border-left-color: #7b91ff;
-            color: #fff;
-        }
-
-        .topic-list {
-            margin: 10px 0;
-            padding-left: 20px;
-        }
-
-        .topic-content {
-            padding-left: 20px;
-            color: #666;
-        }
-
-        .dark-mode .topic-content {
-            color: #aaa;
-        }
-
-        .collapsible::after {
-            content: '\f078';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            position: absolute;
-            right: 15px;
-            transition: transform 0.3s;
-        }
-
-        .collapsible.collapsed::after {
-            transform: rotate(-90deg);
-        }
-
-        .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out;
-            padding: 0 15px;
-        }
-
-        .collapsible-content.expanded {
-            max-height: 2000px;
-            padding: 15px;
-        }
-
-        .module-name {
-            color: #666;
-            font-size: 0.9em;
-            margin-left: 10px;
-        }
-
-        .dark-mode .module-name {
-            color: #aaa;
-        }
-
-        .topic-item {
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            border-left: 3px solid transparent;
-            transition: border-color 0.2s ease;
-        }
-
-        .topic-item:hover {
-            border-left-color: #4361ee;
-            background: rgba(67, 97, 238, 0.03);
-        }
-
-        .topic-title {
-            color: #4361ee;
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 1.1em;
-        }
-
-        .dark-mode .topic-title {
-            color: #7b91ff;
-        }
-
-        .topic-content {
-            color: #666;
-            padding-left: 0;
-            margin-top: 5px;
-        }
-
-        .dark-mode .topic-content {
-            color: #aaa;
-        }
-
-        .topic-list {
-            list-style: none;
-            padding-left: 0;
-            margin: 15px 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <a href="/dashboard" class="btn btn-light back-btn">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-        <h3>Curriculum Overview</h3>
-    </div>
+{% block extra_css %}
+<style>
+    .card-header {
+        background: var(--primary-color);
+        color: white;
+        cursor: default;
+        padding: 15px 20px;
+    }
     
-    <div id="content" class="content"></div>
+    .year-title, .module-title {
+        background: var(--header-bg);
+        padding: 12px 15px;
+        margin: 10px -15px;
+        cursor: pointer;
+        border-left: 4px solid var(--primary-color);
+        position: relative;
+        color: var(--text-color);
+    }
+    
+    .topic-list {
+        margin: 10px 0;
+        padding-left: 0;
+        list-style: none;
+    }
+    
+    .topic-item {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-left: 3px solid transparent;
+        transition: border-color 0.2s ease;
+        color: var(--text-color);
+    }
+    
+    .topic-item:hover {
+        border-left-color: var(--primary-color);
+        background: rgba(67, 97, 238, 0.03);
+    }
+    
+    .topic-title {
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-size: 1.1em;
+    }
+    
+    .topic-content {
+        color: var(--text-color);
+        padding-left: 0;
+        margin-top: 5px;
+    }
+    
+    .collapsible::after {
+        content: '\f078';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        right: 15px;
+        transition: transform 0.3s;
+    }
+    
+    .collapsible.collapsed::after {
+        transform: rotate(-90deg);
+    }
+    
+    .collapsible-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+        padding: 0 15px;
+    }
+    
+    .collapsible-content.expanded {
+        max-height: 2000px;
+        padding: 15px;
+    }
+    
+    .module-name {
+        color: var(--text-color);
+        font-size: 0.9em;
+        margin-left: 10px;
+        opacity: 0.8;
+    }
+</style>
+{% endblock %}
 
-    <script>
-        // Initialize dark mode
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('darkMode') === 'true') {
-                document.body.classList.add('dark-mode');
-            }
-            loadCurriculumContent();
+{% block content %}
+<div id="content" class="content"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize when document is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        loadCurriculumContent();
+    });
+
+    function loadCurriculumContent() {
+        fetch('/static/data/curriculum.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('content').innerHTML = formatCurriculum(data);
+                // Add click listeners after content is loaded
+                initializeCollapsibles();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function initializeCollapsibles() {
+        document.querySelectorAll('.collapsible').forEach(elem => {
+            elem.classList.add('collapsed');
+            elem.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleCollapse(this);
+            });
         });
+    }
 
-        function loadCurriculumContent() {
-            fetch('/static/data/curriculum.json')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('content').innerHTML = formatCurriculum(data);
-                    // Add click listeners after content is loaded
-                    initializeCollapsibles();
-                })
-                .catch(error => console.error('Error:', error));
-        }
+    function toggleCollapse(element) {
+        element.classList.toggle('collapsed');
+        const content = element.nextElementSibling;
+        content.classList.toggle('expanded');
+    }
 
-        function initializeCollapsibles() {
-            document.querySelectorAll('.collapsible').forEach(elem => {
-                elem.classList.add('collapsed');
-                elem.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    toggleCollapse(this);
+    function formatCurriculum(data) {
+        let html = '';
+        Object.entries(data).forEach(([subjectKey, subject]) => {
+            html += `
+                <div class="card mb-4">
+                    <div class="card-header">
+                        ${subject.Title || subjectKey}
+                    </div>
+                    <div class="card-body">`;
+
+            if (subject.Papers) {
+                subject.Papers.forEach(paper => {
+                    html += formatPaper(paper);
                 });
-            });
-        }
+            } else if (subject.Years) {
+                subject.Years.forEach(year => {
+                    html += formatYear(year);
+                });
+            } else if (subject.Modules) {
+                subject.Modules.forEach(module => {
+                    html += formatModule(module);
+                });
+            }
 
-        function toggleCollapse(element) {
-            element.classList.toggle('collapsed');
-            const content = element.nextElementSibling;
-            content.classList.toggle('expanded');
-        }
+            html += `</div></div>`;
+        });
+        return html;
+    }
 
-        function formatCurriculum(data) {
-            let html = '';
-            Object.entries(data).forEach(([subjectKey, subject]) => {
+    function formatYear(year) {
+        return `
+            <div class="year-title collapsible">
+                <i class="fas fa-graduation-cap mr-2"></i> ${year.Title || year.Name}
+            </div>
+            <div class="collapsible-content">
+                ${year.Modules.map(module => formatModule(module)).join('')}
+            </div>`;
+    }
+
+    function formatModule(module) {
+        return `
+            <div class="module-title collapsible">
+                <i class="fas fa-book mr-2"></i> ${module.Title}
+                <span class="module-name">${module.Name || ''}</span>
+            </div>
+            <div class="collapsible-content">
+                ${module.Description ? `<p class="module-description"><em>${module.Description}</em></p>` : ''}
+                ${formatTopics(module.Topics)}
+            </div>`;
+    }
+
+    function formatTopics(topics) {
+        if (!topics) return '';
+        
+        let html = '<div class="topic-list">';
+        topics.forEach(topic => {
+            if (typeof topic === 'string') {
                 html += `
-                    <div class="card">
-                        <div class="card-header">
-                            ${subject.Title}
+                    <div class="topic-item">
+                        <div class="topic-title">
+                            <i class="fas fa-lightbulb mr-2"></i> ${topic}
                         </div>
-                        <div class="card-body">`;
-
-                if (subject.Papers) {
-                    subject.Papers.forEach(paper => {
-                        html += formatPaper(paper);
-                    });
-                } else if (subject.Years) {
-                    subject.Years.forEach(year => {
-                        html += formatYear(year);
-                    });
-                } else if (subject.Modules) {
-                    subject.Modules.forEach(module => {
-                        html += formatModule(module);
-                    });
-                }
-
-                html += `</div></div>`;
-            });
-            return html;
-        }
-
-        function formatYear(year) {
-            return `
-                <div class="year-title">
-                    ${year.Title}
-                </div>
-                <div class="card-body">
-                    ${year.Modules.map(module => formatModule(module)).join('')}
-                </div>`;
-        }
-
-        function formatModule(module) {
-            return `
-                <div class="module-title collapsible">
-                    ${module.Title}
-                    <span class="module-name">${module.Name || ''}</span>
-                </div>
-                <div class="collapsible-content">
-                    ${module.Description ? `<p class="module-description"><em>${module.Description}</em></p>` : ''}
-                    ${formatTopics(module.Topics)}
-                </div>`;
-        }
-
-        function formatTopics(topics) {
-            if (!topics) return '';
-            
-            let html = '<div class="topic-list">';
-            topics.forEach(topic => {
-                if (typeof topic === 'string') {
-                    html += `
-                        <div class="topic-item">
-                            <div class="topic-title">${topic}</div>
-                        </div>`;
-                } else {
-                    html += `
-                        <div class="topic-item">
-                            <div class="topic-title">${topic.Title}</div>
-                            ${topic.Content ? `<div class="topic-content">${topic.Content}</div>` : ''}
-                        </div>`;
-                }
-            });
-            html += '</div>';
-            return html;
-        }
-
-        function formatPaper(paper) {
-            return `
-                <div class="year-title">
-                    ${paper.Title}
-                </div>
-                <div class="card-body">
-                    ${paper.Topics.map(topic => `
-                        <div class="module-title collapsible">
-                            ${topic.Title}
+                    </div>`;
+            } else {
+                html += `
+                    <div class="topic-item">
+                        <div class="topic-title">
+                            <i class="fas fa-lightbulb mr-2"></i> ${topic.Title}
                         </div>
-                        <div class="collapsible-content">
-                            <div class="topic-list">
-                                ${Array.isArray(topic.Content) 
-                                    ? topic.Content.map(item => `
-                                        <div class="topic-item">
-                                            <div class="topic-title">${item}</div>
-                                        </div>`).join('') 
-                                    : ''}
-                            </div>
+                        ${topic.Content ? `<div class="topic-content">${topic.Content}</div>` : ''}
+                    </div>`;
+            }
+        });
+        html += '</div>';
+        return html;
+    }
+
+    function formatPaper(paper) {
+        return `
+            <div class="year-title collapsible">
+                <i class="fas fa-file-alt mr-2"></i> ${paper.Title}
+            </div>
+            <div class="collapsible-content">
+                ${paper.Topics.map(topic => `
+                    <div class="module-title collapsible">
+                        <i class="fas fa-lightbulb mr-2"></i> ${topic.Title}
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="topic-list">
+                            ${Array.isArray(topic.Content) 
+                                ? topic.Content.map(item => `
+                                    <div class="topic-item">
+                                        <div class="topic-title">
+                                            <i class="fas fa-check-circle mr-2"></i> ${item}
+                                        </div>
+                                    </div>`).join('') 
+                                : ''}
                         </div>
-                    `).join('')}
-                </div>`;
-        }
-    </script>
-</body>
-</html>
+                    </div>
+                `).join('')}
+            </div>`;
+    }
+</script>
+{% endblock %}

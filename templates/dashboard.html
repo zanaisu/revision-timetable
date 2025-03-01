@@ -1,474 +1,241 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        /* Theme transitions */
-        body, .card, .form-control, .list-group-item, .btn, 
-        .settings-modal, .uplearn-panel, .calendar-modal,
-        .week-header, .subject-title {
-            transition: background-color 0.3s ease-in-out,
-                        color 0.3s ease-in-out,
-                        border-color 0.3s ease-in-out;
-        }
+{% extends "base.html" %}
 
-        /* Dark mode styles */
-        body.dark-mode { background: #222; color: #fff; }
-        body.dark-mode .card, 
-        body.dark-mode .form-control,
-        body.dark-mode .list-group-item,
-        body.dark-mode .uplearn-panel,
-        body.dark-mode .settings-modal,
-        body.dark-mode .calendar-modal { 
-            background: #333; 
-            color: #fff; 
-            border-color: #444;
-        }
+{% block title %}Dashboard | Revision Timetable{% endblock %}
 
-        body.dark-mode .week-header {
-            background: #444;
-            border-color: #555;
-        }
+{% block header_title %}Dashboard{% endblock %}
 
-        body.dark-mode .subject-title {
-            background: #555;
-        }
-        
-        /* Light mode styles */
-        body { 
-            background: #f5f5f0; /* Soft off-white background */
-        }
-
-        .uplearn-panel, 
-        .settings-modal,
-        .calendar-modal,
-        .list-group-item,
-        .form-control {
-            background: #f8f8f2; /* Slight cream color */
-        }
-
-        .week-header {
-            background: #f0f0e8; /* Slightly darker cream for headers */
-        }
-
-        .subject-title {
-            background: #eaeae2; /* Even darker cream for subject titles */
-        }
-
-        /* Layout */
-        .settings-panel { 
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .settings-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            z-index: 1000;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
-        .settings-modal.dark-mode {
-            background: #333;
-            color: #fff;
-        }
-
-        .settings-footer {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #dee2e6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .dark-mode .settings-footer {
-            border-color: #555;
-        }
-        
-        /* Uplearn Panel */
-        .uplearn-container {
-            position: relative;
-            transition: transform 0.3s;
-            margin-right: 40px;  /* Reduced from 60px */
-        }
-        .uplearn-panel {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .control-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px; /* Changed from 50% to 6px for rounded squares */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            background: #fff;
-            border: 1px solid #dee2e6;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-        .control-btn:hover {
-            background: #f8f9fa;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-        }
-        .dark-mode .control-btn {
-            background: #333;
-            border-color: #444;
-        }
-        .dark-mode .control-btn:hover {
-            background: #444;
-        }
-        .uplearn-btn {
-            color: #28a745;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-        .day-tasks { display: none; }
-        .uplearn-quick-link {
-            padding: 2px 8px;
-            background: transparent;
-            color: #4361ee;
-            text-decoration: none;
-            border-radius: 3px;
-            font-size: 0.8em;
-            margin-left: 10px;
-            border: 1px solid #4361ee;
-            transition: all 0.2s ease;
-        }
-        .uplearn-quick-link:hover {
-            background: #4361ee;
-            color: white;
-            text-decoration: none;
-        }
-        
-        body.dark-mode .uplearn-quick-link {
-            color: #7b91ff;
-            border-color: #7b91ff;
-        }
-        
-        body.dark-mode .uplearn-quick-link:hover {
-            background: #7b91ff;
-            color: #222;
-        }
-        
-        /* Button Colors */
-        .btn-primary {
-            background-color: #4361ee;
-            border-color: #4361ee;
-        }
-        .btn-primary:hover {
-            background-color: #3046c7;
-            border-color: #3046c7;
-        }
-        
-        .btn-danger {
-            background-color: #ef476f;
-            border-color: #ef476f;
-        }
-        .btn-danger:hover {
-            background-color: #d93d62;
-            border-color: #d93d62;
-        }
-        
-        .btn-light {
-            background-color: #f8f9fa;
-            border-color: #e9ecef;
-            color: #495057;
-        }
-        .btn-light:hover {
-            background-color: #e9ecef;
-            border-color: #dee2e6;
-        }
-
-        .calendar-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 1200px;
-            max-height: 90vh;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            z-index: 1100;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .calendar-modal.dark-mode {
-            background: #333;
-            color: #fff;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .week-card {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .week-header {
-            background: #f8f9fa;
-            padding: 10px;
-            border-bottom: 1px solid #dee2e6;
-            font-weight: bold;
-        }
-
-        .dark-mode .week-header {
-            background: #444;
-            border-color: #555;
-        }
-
-        .subject-section {
-            margin-bottom: 15px;
-        }
-
-        .subject-title {
-            padding: 5px 10px;
-            background: #e9ecef;
-            border-radius: 4px;
-            margin-bottom: 8px;
-        }
-
-        .dark-mode .subject-title {
-            background: #555;
-        }
-
-        .exam-date {
-            color: #dc3545;
-            font-size: 0.9em;
-            margin-left: 10px;
-        }
-
-        .calendar-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1050;
-        }
-
-        .settings-panel .btn {
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Settings button specific style */
-        .settings-btn {
-            background: #fff;
-            color: #495057;
-        }
-        .settings-btn:hover {
-            background: #e9ecef;
-        }
-
-        /* Curriculum button specific style */
-        .curriculum-btn {
-            background: #17a2b8;  /* Bootstrap info color */
-            color: #fff;
-            border-color: #17a2b8;
-        }
-        .curriculum-btn:hover {
-            background: #138496;
-            border-color: #138496;
-        }
-
-        /* Dark mode adjustments */
-        .dark-mode .settings-btn {
-            background: #333;
-            color: #fff;
-            border-color: #444;
-        }
-        .dark-mode .settings-btn:hover {
-            background: #444;
-        }
-
-        .dark-mode .curriculum-btn {
-            background: #117a8b;
-            border-color: #117a8b;
-        }
-        .dark-mode .curriculum-btn:hover {
-            background: #0f6674;
-            border-color: #0f6674;
-        }
-    </style>
-</head>
-<body>
-    <!-- Include Settings Component -->
-    {% include 'components/settings.html' %}
-
-    <!-- Main Content -->
-    <div class="container mt-5">
-        <h2>Welcome, {{ user.username }}!</h2>
-        {% if message %}<div class="alert alert-info">{{ message }}</div>{% endif %}
-
-        <div class="row">
-            <!-- Include Tasks Component -->
-            {% include 'components/tasks.html' %}
-
-            <!-- Uplearn Panel -->
-            <div class="col-md-6">
-                <div class="uplearn-container" id="uplearnContainer">
-                    <div class="uplearn-panel">
-                        <h3>Uplearn Progress</h3>
-                        <form method="POST">
-                            <input type="hidden" name="update_progress" value="1">
-                            {% if current_user.subjects and current_user.subjects.chemistry %}
-                                <div class="form-group">
-                                    <label>Chemistry Upscore</label>
-                                    <input type="number" class="form-control" name="chem_progress" value="{{ user.chem_progress|int }}">
+{% block content %}
+    {% if message %}
+    <div class="alert alert-info">{{ message }}</div>
+    {% endif %}
+    
+    <div class="row">
+        <!-- Tasks Section -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="m-0">Today's Tasks</h5>
+                    <span id="current-day" class="text-muted"></span>
+                </div>
+                <div class="card-body">
+                    {% if daily_tasks %}
+                        <div class="row">
+                            {% for task in daily_tasks %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="task-card" data-task-id="{{ task.task|replace(' ', '_') }}">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <h5 class="card-title">{{ task.subject }}</h5>
+                                                    <span class="badge badge-primary">{{ task.duration }} mins</span>
+                                                </div>
+                                                <p class="card-text task-content">{{ task.task }}</p>
+                                                {% if task.type == 'Uplearn' %}
+                                                    {% set link = get_uplearn_link(task.subject) %}
+                                                    {% if link %}
+                                                        <a href="{{ link }}" target="_blank" class="uplearn-link">
+                                                            <i class="fas fa-external-link-alt mr-1"></i> Open in UpLearn
+                                                        </a>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <div class="task-footer mt-2">
+                                                    <span class="badge badge-info">{{ task.type }}</span>
+                                                    <form method="POST" action="{{ url_for('complete_task') }}" class="task-complete-form d-inline">
+                                                        <input type="hidden" name="task" value="{{ task.task }}">
+                                                        <input type="hidden" name="subject" value="{{ task.subject }}">
+                                                        <button type="submit" class="btn btn-success btn-sm rounded-circle" title="Mark as complete" 
+                                                                style="width: 30px; height: 30px; padding: 0; display: inline-flex; align-items: center; justify-content: center;">
+                                                            <i class="fas fa-check"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            {% endif %}
-                            {% if current_user.subjects and current_user.subjects.biology %}
-                                <div class="form-group">
-                                    <label>Biology Y13 Upscore</label>
-                                    <input type="number" class="form-control" name="bio_y13_progress" value="{{ user.bio_y13_progress|int }}">
-                                </div>
-                                <div class="form-group">
-                                    <label>Biology Y12 Upscore</label>
-                                    <input type="number" class="form-control" name="bio_y12_progress" value="{{ user.bio_y12_progress|int }}">
-                                </div>
-                            {% endif %}
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </form>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <!-- Fallback to timetable if no daily tasks -->
+                        {% for day, tasks in timetable.items() %}
+                            <div class="day-tasks" id="tasks-{{ day }}">
+                                <ul class="list-group">
+                                    {% for task in tasks %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ task }}
+                                            {% if 'Chemistry' in task and current_user.subjects and current_user.subjects.chemistry %}
+                                                <a href="https://web.uplearn.co.uk/learn/chemistry-ocr-2" 
+                                                class="uplearn-link" target="_blank">
+                                                    <i class="fas fa-external-link-alt mr-1"></i> UpLearn
+                                                </a>
+                                            {% elif 'Biology' in task and current_user.subjects and current_user.subjects.biology %}
+                                                {% if 'Y13' in task or 'Year 13' in task %}
+                                                    <a href="https://web.uplearn.co.uk/learn/biology-ocr-2" 
+                                                    class="uplearn-link" target="_blank">
+                                                        <i class="fas fa-external-link-alt mr-1"></i> UpLearn
+                                                    </a>
+                                                {% elif 'Y12' in task or 'Year 12' in task %}
+                                                    <a href="https://web.uplearn.co.uk/learn/biology-ocr-1" 
+                                                    class="uplearn-link" target="_blank">
+                                                        <i class="fas fa-external-link-alt mr-1"></i> UpLearn
+                                                    </a>
+                                                {% else %}
+                                                    <a href="https://web.uplearn.co.uk/learn/biology-ocr-2" 
+                                                    class="uplearn-link" target="_blank">
+                                                        <i class="fas fa-external-link-alt mr-1"></i> UpLearn
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <!-- Upcoming Calendar Section (Compact View) -->
+                    <div class="mt-4">
+                        <h5><i class="fas fa-calendar-week mr-2"></i>Upcoming Study Schedule</h5>
+                        {% include 'components/calendar.html' %}
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Include Calendar Modal -->
-    {% include 'calendar.html' %}
-
-    <div class="settings-panel">
-         <button class="control-btn settings-btn" onclick="toggleSettings()"><i class="fas fa-cog"></i></button>
-        <a href="/curriculum" class="control-btn curriculum-btn"><i class="fas fa-book"></i></a>
-        <button class="control-btn uplearn-btn" onclick="toggleUplearn()">Up</button>
-    </div>
-
-    <script>
-        // Core functionality
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('darkMode') === 'true') {
-                document.body.classList.add('dark-mode');
-                document.querySelector('.settings-modal').classList.add('dark-mode');
-                document.getElementById('theme-icon').textContent = '☀️';
-            }
-            setCurrentDay();
-
-            // Initialize curriculum if we're on the curriculum route
-            const panel = document.getElementById('curriculumPanel');
-            if (window.location.pathname === '/curriculum') {
-                panel.style.display = 'block';
-                loadCurriculumContent();
-            }
-        });
-
-        // Utils
-        const setCurrentDay = () => {
-            const date = new Date();
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            document.getElementById('current-day').textContent = 
-                `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
-            showDayTasks(days[date.getDay()]);
-        };
-
-        const showDayTasks = (day) => {
-            document.querySelectorAll('.day-tasks').forEach(el => 
-                el.style.display = el.id === `tasks-${day}` ? 'block' : 'none'
-            );
-        };
-
-        // UI Controls
-        const toggleDarkMode = () => {
-            const body = document.body;
-            const modal = document.querySelector('.settings-modal');
-            const calendarModal = document.querySelector('.calendar-modal');
+        
+        <!-- UpLearn Progress Section -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="m-0">UpLearn Progress</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <input type="hidden" name="update_progress" value="1">
+                        
+                        {% if current_user.subjects and current_user.subjects.chemistry %}
+                            <div class="form-group">
+                                <label for="chem_progress">Chemistry Upscore</label>
+                                <div class="d-flex align-items-center">
+                                    <div class="progress flex-grow-1 mr-3">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {{ user.chem_progress }}%;"
+                                             aria-valuenow="{{ user.chem_progress }}" 
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div style="width: 70px">
+                                        <input type="number" class="form-control form-control-sm" 
+                                               id="chem_progress" name="chem_progress" 
+                                               value="{{ user.chem_progress|int }}">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if current_user.subjects and current_user.subjects.biology %}
+                            <div class="form-group">
+                                <label for="bio_y13_progress">Biology Y13 Upscore</label>
+                                <div class="d-flex align-items-center">
+                                    <div class="progress flex-grow-1 mr-3">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {{ user.bio_y13_progress }}%;"
+                                             aria-valuenow="{{ user.bio_y13_progress }}" 
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div style="width: 70px">
+                                        <input type="number" class="form-control form-control-sm" 
+                                               id="bio_y13_progress" name="bio_y13_progress" 
+                                               value="{{ user.bio_y13_progress|int }}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="bio_y12_progress">Biology Y12 Upscore</label>
+                                <div class="d-flex align-items-center">
+                                    <div class="progress flex-grow-1 mr-3">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {{ user.bio_y12_progress }}%;"
+                                             aria-valuenow="{{ user.bio_y12_progress }}" 
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div style="width: 70px">
+                                        <input type="number" class="form-control form-control-sm" 
+                                               id="bio_y12_progress" name="bio_y12_progress" 
+                                               value="{{ user.bio_y12_progress|int }}">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-1"></i> Update Progress
+                        </button>
+                    </form>
+                </div>
+            </div>
             
-            body.classList.toggle('dark-mode');
-            modal.classList.toggle('dark-mode');
-            if (calendarModal) {
-                calendarModal.classList.toggle('dark-mode');
-            }
-            
-            const icon = document.getElementById('theme-icon');
-            icon.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
-            localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
-        };
+            <!-- Exam Countdown Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="m-0">A-Level Exam Countdown</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for subject, exams in upcoming_exams.items() %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <strong>{{ subject }}</strong>
+                                    <span class="badge {% if exams.date|days_until < 30 %}badge-danger{% elif exams.date|days_until < 60 %}badge-warning{% else %}badge-info{% endif %}">
+                                        {{ exams.date|days_until }} days
+                                    </span>
+                                </div>
+                                <div class="mt-1">
+                                    <small class="text-muted">{{ exams.paper }}: {{ exams.date|format_date('%d %b %Y') }}</small>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Calendar Modal -->
+    <div class="modal-overlay" style="display: none;"></div>
+    <div class="calendar-modal" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>Study Calendar</h3>
+            <button class="btn btn-sm btn-light" onclick="closeCalendarModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        {% include 'components/calendar.html' %}
+    </div>
+{% endblock %}
 
-        const toggleSettings = () => {
-            const modal = document.getElementById('settingsModal');
-            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-        };
+{% block extra_js %}
+<script>
+    // Add current date to the template context
+    document.addEventListener('DOMContentLoaded', function() {
+        // This ensures that days_left calculation can be done in the template
+        window.now = new Date();
+    });
 
-        const toggleUplearn = () => {
-            const container = document.getElementById('uplearnContainer');
-            const button = container.querySelector('.slide-tab');
-            container.classList.toggle('collapsed');
-            button.innerHTML = container.classList.contains('collapsed') ? '&larr;' : '&rarr;';
-        };
-
-        const toggleCalendar = () => {
-            const tasks = document.querySelectorAll('.day-tasks');
-            const showingAll = tasks[0].style.display === 'none';
-            tasks.forEach(day => day.style.display = showingAll ? 'block' : 'none');
-            if (!showingAll) setCurrentDay();
-            event.target.textContent = showingAll ? 'Show Today' : 'Show Full Week';
-        };
-
-        function openCalendarView() {
-            document.querySelector('.calendar-modal').style.display = 'block';
-            document.querySelector('.modal-overlay').style.display = 'block';
-            if (document.body.classList.contains('dark-mode')) {
-                document.querySelector('.calendar-modal').classList.add('dark-mode');
-            }
-        }
-
-        function closeCalendarView() {
+    // Add event listener for the fullscreen calendar close button
+    document.querySelectorAll('.calendar-close-btn, .modal-backdrop').forEach(elem => {
+        elem.addEventListener('click', function() {
+            // Remove both the modal and the backdrop
             document.querySelector('.calendar-modal').style.display = 'none';
-            document.querySelector('.modal-overlay').style.display = 'none';
-        }
-    </script>
-</body>
-</html>
+            let backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            // Re-enable scrolling on the body
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,460 @@
+{% extends "base.html" %}
+
+{% block title %}Time Analysis{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">Time Analysis & Efficiency</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Understand your time allocation, study patterns and efficiency metrics.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Weekly Time Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="weeklyDistributionChart" height="300"></canvas>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Productivity Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="productivityByDayChart" height="300"></canvas>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Study Distribution Insights</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Time Allocation by Day</h6>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Day</th>
+                                            <th>Hours</th>
+                                            <th>% of Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% set total_minutes = 0 %}
+                                        {% for day, minutes in time_distribution.items() %}
+                                            {% set total_minutes = total_minutes + minutes %}
+                                        {% endfor %}
+                                        
+                                        {% for day, minutes in time_distribution.items() %}
+                                            <tr>
+                                                <td>{{ day }}</td>
+                                                <td>{{ (minutes / 60)|round(1) }}</td>
+                                                <td>
+                                                    {% if total_minutes > 0 %}
+                                                        {{ ((minutes / total_minutes) * 100)|round }}%
+                                                    {% else %}
+                                                        0%
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6>Productivity by Day</h6>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Day</th>
+                                            <th>Tasks</th>
+                                            <th>Tasks/Hour</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for day, data in productivity_by_day.items() %}
+                                            <tr>
+                                                <td>{{ day }}</td>
+                                                <td>
+                                                    {% if day in productivity_by_day %}
+                                                        {{ productivity_by_day[day]|round(2) }}
+                                                    {% else %}
+                                                        0
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if data > 0 %}
+                                                        <span class="badge {% if data > 1.5 %}bg-success{% elif data > 1.0 %}bg-info{% elif data > 0.5 %}bg-warning{% else %}bg-danger{% endif %}">
+                                                            {{ data|round(2) }}
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="badge bg-secondary">0</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Study Streak</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="streak-display mb-4">
+                        <div class="current-streak">
+                            <h2 class="display-3 text-warning">{{ current_streak }}</h2>
+                            <p>Current Streak (days)</p>
+                        </div>
+                        
+                        <div class="streak-badges mt-3">
+                            <span class="streak-badge">🔥</span>
+                            {% for i in range(1, current_streak + 1) %}
+                                {% if i <= 7 %}
+                                    <span class="streak-badge active">{{ i }}</span>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% for i in range(current_streak + 1, 8) %}
+                                {% if i <= 7 %}
+                                    <span class="streak-badge">{{ i }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="streak-stats row text-center">
+                        <div class="col-6">
+                            <h4 class="text-primary">{{ max_streak }}</h4>
+                            <p class="text-muted mb-0">Longest Streak</p>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-success">{{ (current_streak / 7)|round(1) }}</h4>
+                            <p class="text-muted mb-0">Weeks</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer bg-light">
+                    <h6>Streak Insights:</h6>
+                    {% if current_streak == 0 %}
+                        <p class="text-danger">
+                            <i class="fas fa-exclamation-circle"></i> You haven't logged any tasks today! 
+                            Complete at least one task to maintain your streak.
+                        </p>
+                    {% elif current_streak < 3 %}
+                        <p class="text-warning">
+                            <i class="fas fa-fire-alt"></i> Keep going! You're building momentum.
+                        </p>
+                    {% elif current_streak >= 7 %}
+                        <p class="text-success">
+                            <i class="fas fa-trophy"></i> Impressive! You've maintained a week-long streak.
+                        </p>
+                    {% else %}
+                        <p class="text-primary">
+                            <i class="fas fa-thumbs-up"></i> Good work! Keep consistent for best results.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Best Study Times</h5>
+                </div>
+                <div class="card-body">
+                    <div class="optimal-times mb-4">
+                        <h6>Most Productive Days</h6>
+                        {% set sorted_days = productivity_by_day.items()|sort(attribute=1, reverse=true) %}
+                        <div class="d-flex flex-wrap mb-3">
+                            {% for day, productivity in sorted_days %}
+                                {% if productivity > 0 %}
+                                    <div class="day-badge mr-2 mb-2 
+                                        {% if loop.index <= 2 %}top-day{% else %}avg-day{% endif %}">
+                                        {{ day[:3] }}
+                                        <span class="small d-block">{{ productivity|round(1) }}</span>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        
+                        {% set max_day, max_productivity = sorted_days|first %}
+                        {% if max_productivity > 0 %}
+                            <div class="alert alert-success">
+                                <i class="fas fa-lightbulb"></i> <strong>{{ max_day }}</strong> is your most productive day 
+                                with {{ max_productivity|round(2) }} tasks per hour.
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="time-recommendations">
+                        <h6>Study Schedule Recommendations</h6>
+                        <ul class="recommendation-list">
+                            {% if sorted_days %}
+                                <li>
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    Schedule challenging tasks on {{ sorted_days[0][0] }} and {{ sorted_days[1][0] }} when your productivity is highest
+                                </li>
+                            {% endif %}
+                            
+                            {% set least_used_days = [] %}
+                            {% for day, minutes in time_distribution.items() %}
+                                {% if minutes == 0 %}
+                                    {% set least_used_days = least_used_days + [day] %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if least_used_days %}
+                                <li>
+                                    <i class="fas fa-exclamation-circle text-warning"></i>
+                                    Consider studying on 
+                                    {% for day in least_used_days %}
+                                        {{ day }}{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                    to balance your schedule
+                                </li>
+                            {% endif %}
+                            
+                            <li>
+                                <i class="fas fa-check-circle text-success"></i>
+                                Maintain consistent daily practice to build knowledge retention
+                            </li>
+                            
+                            <li>
+                                <i class="fas fa-check-circle text-success"></i>
+                                Use the Pomodoro technique (25min work, 5min break) to optimize focus
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('progress_log') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-chart-line"></i> Log Today's Progress
+                        </a>
+                        <a href="{{ url_for('study_analytics') }}" class="btn btn-outline-warning">
+                            <i class="fas fa-chart-bar"></i> Performance Dashboard
+                        </a>
+                        <a href="{{ url_for('subject_insights') }}" class="btn btn-outline-success">
+                            <i class="fas fa-brain"></i> Subject Insights
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ChartJS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Weekly Time Distribution Chart
+    const weeklyCtx = document.getElementById('weeklyDistributionChart').getContext('2d');
+    
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const timeData = [];
+    
+    for (const day of days) {
+        timeData.push({{ time_distribution[day] }} / 60); // Convert minutes to hours
+    }
+    
+    new Chart(weeklyCtx, {
+        type: 'bar',
+        data: {
+            labels: days,
+            datasets: [{
+                label: 'Hours Spent',
+                data: timeData,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.7)',  // Monday (blue)
+                    'rgba(255, 99, 132, 0.7)',  // Tuesday (red)
+                    'rgba(255, 206, 86, 0.7)',  // Wednesday (yellow)
+                    'rgba(75, 192, 192, 0.7)',  // Thursday (green)
+                    'rgba(153, 102, 255, 0.7)', // Friday (purple)
+                    'rgba(255, 159, 64, 0.7)',  // Saturday (orange)
+                    'rgba(201, 203, 207, 0.7)'  // Sunday (grey)
+                ],
+                borderColor: [
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 206, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)',
+                    'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Hours Spent'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Study Hours by Day of Week'
+                }
+            }
+        }
+    });
+    
+    // Productivity by Day Chart
+    const productivityCtx = document.getElementById('productivityByDayChart').getContext('2d');
+    
+    const productivityData = [];
+    for (const day of days) {
+        productivityData.push({{ productivity_by_day[day] }});
+    }
+    
+    new Chart(productivityCtx, {
+        type: 'radar',
+        data: {
+            labels: days,
+            datasets: [{
+                label: 'Tasks per Hour',
+                data: productivityData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgb(75, 192, 192)',
+                pointBackgroundColor: 'rgb(75, 192, 192)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(75, 192, 192)'
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: Math.max(...productivityData.filter(p => !isNaN(p))) + 0.5 || 3,
+                    ticks: {
+                        stepSize: 0.5
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Productivity by Day of Week (Tasks/Hour)'
+                }
+            }
+        }
+    });
+});
+</script>
+
+<style>
+.streak-display {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.streak-badges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.streak-badge {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #adb5bd;
+    font-weight: bold;
+}
+
+.streak-badge.active {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.day-badge {
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    background-color: #e9ecef;
+    color: #6c757d;
+}
+
+.day-badge.top-day {
+    background-color: #28a745;
+    color: white;
+}
+
+.day-badge.avg-day {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.recommendation-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.recommendation-list li {
+    margin-bottom: 12px;
+    padding-left: 24px;
+    position: relative;
+}
+
+.recommendation-list li i {
+    position: absolute;
+    left: 0;
+    top: 4px;
+}
+
+.d-grid {
+    display: grid;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+</style>
+{% endblock %}

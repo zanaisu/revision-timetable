@@ -1,0 +1,725 @@
+{% extends "base.html" %}
+
+{% block title %}Performance Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Tab navigation - removed subject insights tab -->
+    <ul class="nav nav-tabs mb-4" id="analyticsTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="time-tab" data-bs-toggle="tab" data-bs-target="#time" type="button" role="tab" aria-controls="time" aria-selected="false">Time Analysis</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="analyticsTabContent">
+        <!-- Overview Tab -->
+        <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark">
+                            <h4 class="mb-0">Performance Dashboard</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="card mb-3 border-warning">
+                                        <div class="card-body text-center">
+                                            <h3 class="display-4 text-warning">{{ task_logs|length }}</h3>
+                                            <p class="lead mb-0">Total Tasks Completed</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card mb-3 border-info">
+                                        <div class="card-body text-center">
+                                            <h3 class="display-4 text-info">{{ uplearn_logs|length }}</h3>
+                                            <p class="lead mb-0">UpLearn Sessions</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card mb-3 border-success">
+                                        <div class="card-body text-center">
+                                            {% set total_lessons = 0 %}
+                                            {% for log in uplearn_logs %}
+                                                {% set total_lessons = total_lessons + log.lessons_completed %}
+                                            {% endfor %}
+                                            <h3 class="display-4 text-success">{{ total_lessons|round(1) }}</h3>
+                                            <p class="lead mb-0">UpLearn Lessons</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card mb-3 border-primary">
+                                        <div class="card-body text-center">
+                                            {% set total_minutes = 0 %}
+                                            {% for log in task_logs %}
+                                                {% set total_minutes = total_minutes + log.duration %}
+                                            {% endfor %}
+                                            {% for log in uplearn_logs %}
+                                                {% set total_minutes = total_minutes + log.time_spent %}
+                                            {% endfor %}
+                                            <h3 class="display-4 text-primary">{{ (total_minutes / 60)|round(1) }}</h3>
+                                            <p class="lead mb-0">Total Hours Studied</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Weekly Progress Tracker</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="weeklyProgressChart" height="250"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Subject Performance</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <canvas id="tasksBySubjectChart" height="250"></canvas>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Subject</th>
+                                                    <th>Tasks</th>
+                                                    <th>Avg. Difficulty</th>
+                                                    <th>Avg. Time (min)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for subject in ['Chemistry', 'Biology Y13', 'Biology Y12', 'Psychology'] %}
+                                                    <tr>
+                                                        <td>{{ subject }}</td>
+                                                        <td>{{ task_logs|selectattr('subject', 'equalto', subject)|list|length }}</td>
+                                                        <td>
+                                                            {% if subject in avg_difficulty_by_subject %}
+                                                                {{ avg_difficulty_by_subject[subject]|round(1) }}/5
+                                                            {% else %}
+                                                                -
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            {% if subject in avg_duration_by_subject %}
+                                                                {{ avg_duration_by_subject[subject]|round }}
+                                                            {% else %}
+                                                                -
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">UpLearn Progress Analysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <canvas id="uplearnProgressChart" height="250"></canvas>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Subject</th>
+                                                    <th>Sessions</th>
+                                                    <th>Lessons</th>
+                                                    <th>Avg. Comprehension</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for subject in ['Chemistry', 'Biology Y13', 'Biology Y12'] %}
+                                                    {% set subject_logs = uplearn_logs|selectattr('subject', 'equalto', subject)|list %}
+                                                    <tr>
+                                                        <td>{{ subject }}</td>
+                                                        <td>{{ subject_logs|length }}</td>
+                                                        <td>
+                                                            {% set lessons = 0 %}
+                                                            {% for log in subject_logs %}
+                                                                {% set lessons = lessons + log.lessons_completed %}
+                                                            {% endfor %}
+                                                            {{ lessons|round(1) }}
+                                                        </td>
+                                                        <td>
+                                                            {% if subject_logs %}
+                                                                {% set total_comp = 0 %}
+                                                                {% for log in subject_logs %}
+                                                                    {% set total_comp = total_comp + log.comprehension %}
+                                                                {% endfor %}
+                                                                {{ (total_comp / subject_logs|length)|round(1) }}/5
+                                                            {% else %}
+                                                                -
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">Productivity Score</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="productivity-gauge mb-3">
+                                <div class="gauge-value">
+                                    <h2 class="display-4 text-warning">{{ productivity|round(2) }}</h2>
+                                </div>
+                                <div class="gauge-label">
+                                    <p class="mb-0">Tasks per hour</p>
+                                </div>
+                            </div>
+                            <p class="text-muted">Your productivity score measures how many tasks you complete per hour of study time.</p>
+                            
+                            <div class="mt-4">
+                                <h6>Efficiency Rating</h6>
+                                <div class="progress" style="height: 25px;">
+                                    {% set efficiency_percentage = (productivity / 3) * 100 %}
+                                    {% if efficiency_percentage > 100 %}
+                                        {% set efficiency_percentage = 100 %}
+                                    {% endif %}
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ efficiency_percentage }}%;" 
+                                         aria-valuenow="{{ efficiency_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                        {{ efficiency_percentage|round }}%
+                                    </div>
+                                </div>
+                                <small class="text-muted d-flex justify-content-between mt-1">
+                                    <span>Low (0.5)</span>
+                                    <span>Average (1.5)</span>
+                                    <span>High (3.0)</span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Recent Activity</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush">
+                                {% for log in task_logs[:5] %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">{{ log.task|truncate(30) }}</h6>
+                                            <small>{{ log.date_completed.strftime('%d %b') }}</small>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-primary">{{ log.subject }}</small>
+                                            <small>
+                                                {% for i in range(5) %}
+                                                    {% if i < log.difficulty %}
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star text-muted"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{{ url_for('progress_log') }}" class="btn btn-sm btn-primary">View All Activity</a>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Week-by-Week Stats</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush">
+                                {% for week_label, stats in week_stats.items() %}
+                                    {% if loop.index <= 5 %}
+                                        <div class="list-group-item">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">{{ week_label }}</h6>
+                                                <small>{{ stats.tasks }} tasks</small>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <small class="text-muted">{{ stats.time_spent }} hours</small>
+                                                <small class="text-success">{{ stats.uplearn_lessons }} UpLearn lessons</small>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{{ url_for('time_analysis') }}" class="btn btn-sm btn-success">Time Analysis</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject Insights Tab removed -->
+        
+        <!-- Time Analysis Tab -->
+        <div class="tab-pane fade" id="time" role="tabpanel" aria-labelledby="time-tab">
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Time Distribution Analysis</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Analyze how you distribute your study time throughout the week.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Study Time by Day of Week</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="timeDistributionChart" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">Tasks Productivity by Day</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="productivityChart" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card mb-4 text-center">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">Study Streak</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-1 fw-bold mb-3 text-warning">{{ current_streak }}</div>
+                            <p class="lead">days in a row</p>
+                            <div class="text-muted">Your longest streak: {{ max_streak }} days</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Weekly Distribution Analysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Day</th>
+                                            <th>Minutes Studied</th>
+                                            <th>Tasks Completed</th>
+                                            <th>Productivity</th>
+                                            <th>Focus Rating</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for day, minutes in time_distribution.items() %}
+                                            <tr>
+                                                <td>
+                                                    <strong>{{ day }}</strong>
+                                                    {% if day == now.strftime('%A') %}
+                                                        <span class="badge bg-primary ms-2">Today</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ minutes }} min</td>
+                                                <td>
+                                                    {% if day in day_productivity %}
+                                                        {{ day_productivity[day]['tasks'] }}
+                                                    {% else %}
+                                                        0
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if day in productivity_by_day %}
+                                                        {{ productivity_by_day[day]|round(2) }} tasks/hr
+                                                    {% else %}
+                                                        -
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if minutes > 0 %}
+                                                        {% set focus_rating = (productivity_by_day.get(day, 0) / 3) * 5 %}
+                                                        {% if focus_rating > 5 %}{% set focus_rating = 5 %}{% endif %}
+                                                        {% for i in range(5) %}
+                                                            {% if i < focus_rating|int %}
+                                                                <i class="fas fa-star text-warning"></i>
+                                                            {% elif i < focus_rating|round(0, 'ceil') %}
+                                                                <i class="fas fa-star-half-alt text-warning"></i>
+                                                            {% else %}
+                                                                <i class="far fa-star text-muted"></i>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <span class="text-muted">No data</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ChartJS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Weekly Progress Chart
+    const weeklyCtx = document.getElementById('weeklyProgressChart').getContext('2d');
+    
+    // Prepare data from week_stats
+    const weeks = [];
+    const taskCounts = [];
+    const uplearnLessons = [];
+    const timeSpent = [];
+    
+    {% for week_label, stats in week_stats.items() %}
+        weeks.push("{{ week_label }}");
+        taskCounts.push({{ stats.tasks }});
+        uplearnLessons.push({{ stats.uplearn_lessons }});
+        timeSpent.push({{ stats.time_spent }});
+    {% endfor %}
+    
+    // Reverse arrays to show oldest first
+    weeks.reverse();
+    taskCounts.reverse();
+    uplearnLessons.reverse();
+    timeSpent.reverse();
+    
+    new Chart(weeklyCtx, {
+        type: 'line',
+        data: {
+            labels: weeks,
+            datasets: [
+                {
+                    label: 'Tasks Completed',
+                    data: taskCounts,
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'UpLearn Lessons',
+                    data: uplearnLessons,
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Hours Spent',
+                    data: timeSpent,
+                    borderColor: '#ffc107',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Count'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Week'
+                    }
+                }
+            }
+        }
+    });
+    
+    // Tasks by Subject Chart
+    const subjectCtx = document.getElementById('tasksBySubjectChart').getContext('2d');
+    
+    const subjectCounts = {
+        'Chemistry': {{ task_logs|selectattr('subject', 'equalto', 'Chemistry')|list|length }},
+        'Biology Y13': {{ task_logs|selectattr('subject', 'equalto', 'Biology Y13')|list|length }},
+        'Biology Y12': {{ task_logs|selectattr('subject', 'equalto', 'Biology Y12')|list|length }},
+        'Psychology': {{ task_logs|selectattr('subject', 'equalto', 'Psychology')|list|length }}
+    };
+    
+    new Chart(subjectCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(subjectCounts),
+            datasets: [{
+                data: Object.values(subjectCounts),
+                backgroundColor: [
+                    '#dc3545',  // Chemistry (red)
+                    '#28a745',  // Biology Y13 (green)
+                    '#17a2b8',  // Biology Y12 (cyan)
+                    '#6f42c1'   // Psychology (purple)
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                title: {
+                    display: true,
+                    text: 'Tasks Completed by Subject'
+                }
+            }
+        }
+    });
+    
+    // UpLearn Progress Chart
+    const uplearnCtx = document.getElementById('uplearnProgressChart').getContext('2d');
+    
+    const uplearnCounts = {};
+    {% for subject in ['Chemistry', 'Biology Y13', 'Biology Y12'] %}
+        uplearnCounts['{{ subject }}'] = {
+            'sessions': {{ uplearn_logs|selectattr('subject', 'equalto', subject)|list|length }},
+            'lessons': 0
+        };
+        
+        {% for log in uplearn_logs|selectattr('subject', 'equalto', subject)|list %}
+            uplearnCounts['{{ subject }}']['lessons'] += {{ log.lessons_completed }};
+        {% endfor %}
+    {% endfor %}
+    
+    new Chart(uplearnCtx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(uplearnCounts),
+            datasets: [
+                {
+                    label: 'Sessions',
+                    data: Object.values(uplearnCounts).map(v => v.sessions),
+                    backgroundColor: 'rgba(255, 193, 7, 0.7)',
+                    borderColor: '#ffc107',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Lessons Completed',
+                    data: Object.values(uplearnCounts).map(v => v.lessons),
+                    backgroundColor: 'rgba(40, 167, 69, 0.7)',
+                    borderColor: '#28a745',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'UpLearn Progress by Subject'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Count'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Subject'
+                    }
+                }
+            }
+        }
+    });
+    
+    // Time Distribution Chart
+    const timeCtx = document.getElementById('timeDistributionChart').getContext('2d');
+    new Chart(timeCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for day in time_distribution %}'{{ day }}',{% endfor %}],
+            datasets: [{
+                label: 'Minutes Spent',
+                data: [{% for day, minutes in time_distribution.items() %}{{ minutes }},{% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Study Time by Day of Week'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Minutes'
+                    }
+                }
+            }
+        }
+    });
+
+    // Productivity Chart
+    const prodCtx = document.getElementById('productivityChart').getContext('2d');
+    new Chart(prodCtx, {
+        type: 'line',
+        data: {
+            labels: [{% for day in productivity_by_day %}'{{ day }}',{% endfor %}],
+            datasets: [{
+                label: 'Tasks per Hour',
+                data: [{% for day, value in productivity_by_day.items() %}{{ value|round(2) }},{% endfor %}],
+                fill: false,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                tension: 0.3,
+                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Productivity by Day of Week'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Tasks per Hour'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+
+<style>
+.productivity-gauge {
+    padding: 20px;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    border: 10px solid #ffc107;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.gauge-value {
+    font-weight: bold;
+}
+
+.gauge-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+@media (max-width: 768px) {
+    .productivity-gauge {
+        width: 150px;
+        height: 150px;
+        border-width: 8px;
+    }
+    
+    .productivity-gauge .display-4 {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}

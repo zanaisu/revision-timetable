@@ -1,0 +1,337 @@
+<div class="side-panel" id="sidePanel">
+    <!-- Minimized bar buttons -->
+    <div class="side-panel-mini-buttons">
+        <button class="side-panel-toggle" onclick="toggleSidePanel()">
+            <i class="fas fa-chevron-left" id="toggleIcon"></i>
+        </button>
+        <button class="btn btn-info mb-2" onclick="toggleCurriculum()">
+            <i class="fas fa-book"></i>
+        </button>
+        <button class="btn btn-light mb-2" onclick="toggleSettings()">
+            <i class="fas fa-cog"></i>
+        </button>
+    </div>
+
+    <div class="side-panel-content">
+        <div class="side-panel-header">
+            <h4>Quick Actions</h4>
+            <button class="close-panel" onclick="toggleSidePanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="side-panel-section">
+            <h5>Navigation</h5>
+            <div class="d-flex flex-column gap-2">
+                <a href="{{ url_for('study_planner') }}" class="btn btn-outline-primary btn-block">
+                    <i class="fas fa-book"></i> Study Planner
+                </a>
+                <a href="{{ url_for('curriculum') }}" class="btn btn-outline-info btn-block">
+                    <i class="fas fa-graduation-cap"></i> Curriculum
+                </a>
+                <a href="{{ url_for('progress_log') }}" class="btn btn-outline-success btn-block">
+                    <i class="fas fa-chart-line"></i> Progress Log
+                </a>
+            </div>
+        </div>
+        
+        <div class="side-panel-section">
+            <h5>Analytics & Insights</h5>
+            <div class="d-flex flex-column gap-2">
+                <a href="{{ url_for('study_analytics') }}" class="btn btn-outline-warning btn-block">
+                    <i class="fas fa-chart-bar"></i> Performance Dashboard
+                </a>
+                <a href="{{ url_for('subject_insights') }}" class="btn btn-outline-warning btn-block">
+                    <i class="fas fa-brain"></i> Subject Insights
+                </a>
+                <a href="{{ url_for('time_analysis') }}" class="btn btn-outline-warning btn-block">
+                    <i class="fas fa-hourglass-half"></i> Time Analysis
+                </a>
+            </div>
+        </div>
+
+        <div class="side-panel-section">
+            <h5>Settings</h5>
+            <div class="d-flex flex-column gap-2">
+                <button class="btn btn-outline-secondary btn-block" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon"></i> <span id="theme-text">Dark Mode</span>
+                </button>
+                <button class="btn btn-outline-secondary btn-block" onclick="toggleSettings()">
+                    <i class="fas fa-cog"></i> Preferences
+                </button>
+            </div>
+        </div>
+
+        <div class="side-panel-section">
+            <h5>Quick Links</h5>
+            <div class="d-flex flex-column gap-2">
+                <a href="https://web.uplearn.co.uk/learn/chemistry-ocr-2" target="_blank" 
+                   class="btn btn-outline-success btn-block">
+                    <i class="fas fa-flask"></i> Chemistry Uplearn
+                </a>
+                <a href="https://web.uplearn.co.uk/learn/biology-ocr-2" target="_blank"
+                   class="btn btn-outline-success btn-block">
+                    <i class="fas fa-dna"></i> Biology Y13 Uplearn
+                </a>
+                <a href="https://web.uplearn.co.uk/learn/biology-ocr-1" target="_blank"
+                   class="btn btn-outline-success btn-block">
+                    <i class="fas fa-leaf"></i> Biology Y12 Uplearn
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.side-panel {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    width: 350px;  /* Increased from 300px */
+    background: #fff;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transform: translateX(300px); /* Show 50px when closed - increased from 260px/40px */
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.side-panel.open {
+    transform: translateX(0);
+}
+
+/* Move settings panel to overlay the minimized side panel */
+.settings-panel { 
+    position: fixed; 
+    top: 20px; 
+    right: 50px; /* Adjust to overlay the minimized panel */
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.side-panel-toggle {
+    width: 40px;  /* Increased from 32px */
+    height: 40px;  /* Increased from 32px */
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    cursor: pointer;
+}
+
+/* Visible bar styling */
+.side-panel::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50px;  /* Increased from 40px */
+    height: 100%;
+    background: #f8f9fa;
+    border-left: 1px solid #dee2e6;
+}
+
+/* Dark mode adjustments */
+body.dark-mode .side-panel::before {
+    background: #333;
+    border-left-color: #444;
+}
+
+body.dark-mode .side-panel-toggle {
+    color: #fff;
+}
+
+.side-panel-content {
+    height: 100%;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.side-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.side-panel-section {
+    margin-bottom: 30px;
+}
+
+.close-panel {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+/* Dark mode styles */
+body.dark-mode .side-panel,
+body.dark-mode .side-panel-toggle {
+    background: #333;
+    color: #fff;
+}
+
+body.dark-mode .side-panel {
+    border-left: 1px solid #444;
+}
+
+body.dark-mode .btn-outline-secondary {
+    color: #fff;
+    border-color: #555;
+}
+
+body.dark-mode .btn-outline-secondary:hover {
+    background: #444;
+    border-color: #666;
+}
+
+.control-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: #fff;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.uplearn-btn {
+    color: #28a745;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.side-panel-mini-buttons {
+    position: absolute;
+    left: 0;
+    top: 20px;
+    width: 50px;  /* Increased from 40px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1002;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    gap: 10px;
+}
+
+.side-panel-mini-buttons .btn,
+.side-panel-mini-buttons .side-panel-toggle {
+    width: 40px;  /* Made all buttons same size */
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* Hide mini buttons when panel is open */
+.side-panel.open .side-panel-mini-buttons {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Dark mode adjustments */
+body.dark-mode .side-panel-mini-buttons .btn-light {
+    background: #444;
+    border-color: #555;
+    color: #fff;
+}
+
+body.dark-mode .side-panel-mini-buttons .btn-light:hover {
+    background: #555;
+}
+
+/* Analytics section */
+.btn-outline-warning {
+    color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+body.dark-mode .btn-outline-warning {
+    color: #ffc107;
+    border-color: #b38600;
+}
+
+body.dark-mode .btn-outline-warning:hover {
+    background-color: #b38600;
+    color: #212529;
+}
+</style>
+
+<script>
+function toggleSidePanel() {
+    const panel = document.getElementById('sidePanel');
+    const icon = document.getElementById('toggleIcon');
+    panel.classList.toggle('open');
+    icon.classList.toggle('fa-chevron-left');
+    icon.classList.toggle('fa-chevron-right');
+    
+    // Remove or restore pointer events based on panel state
+    const miniButtons = panel.querySelector('.side-panel-mini-buttons');
+    if (panel.classList.contains('open')) {
+        setTimeout(() => miniButtons.style.display = 'none', 300); // Hide after fade out
+    } else {
+        miniButtons.style.display = 'flex';
+    }
+    
+    // Adjust settings panel position when side panel is open
+    const settingsPanel = document.querySelector('.settings-panel');
+    if (panel.classList.contains('open')) {
+        settingsPanel.style.right = '320px'; // Move buttons outside opened panel
+    } else {
+        settingsPanel.style.right = '50px';  // Return to original position
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Update theme text based on current mode
+    const updateThemeText = () => {
+        const isDark = document.body.classList.contains('dark-mode');
+        document.getElementById('theme-text').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+    };
+    updateThemeText();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+                updateThemeText();
+            }
+        });
+    });
+    
+    observer.observe(document.body, {
+        attributes: true
+    });
+});
+
+// Add curriculum toggle function
+function toggleCurriculum() {
+    window.location.href = '{{ url_for("curriculum") }}';
+}
+</script>

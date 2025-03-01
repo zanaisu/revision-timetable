@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}Subject Insights{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">Subject Insights & Analysis</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">This dashboard shows detailed analysis of your learning patterns and performance by subject.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for subject in ['Chemistry', 'Biology Y13', 'Biology Y12', 'Psychology'] %}
+            {% if subject in subject_insights %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        {% if subject == 'Chemistry' %}
+                            <div class="card-header bg-danger text-white">
+                                <h5 class="mb-0"><i class="fas fa-flask mr-2"></i> {{ subject }}</h5>
+                            </div>
+                        {% elif subject == 'Biology Y13' %}
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-dna mr-2"></i> {{ subject }}</h5>
+                            </div>
+                        {% elif subject == 'Biology Y12' %}
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0"><i class="fas fa-leaf mr-2"></i> {{ subject }}</h5>
+                            </div>
+                        {% else %}
+                            <div class="card-header bg-purple text-white">
+                                <h5 class="mb-0"><i class="fas fa-brain mr-2"></i> {{ subject }}</h5>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <div class="stat-card text-center p-3 border rounded bg-light">
+                                        <h3 class="text-primary">{{ subject_insights[subject].total_tasks }}</h3>
+                                        <p class="mb-0">Tasks Completed</p>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stat-card text-center p-3 border rounded bg-light">
+                                        <h3 class="text-success">{{ subject_insights[subject].total_uplearn_lessons|round(1) }}</h3>
+                                        <p class="mb-0">UpLearn Lessons</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="difficulty-analysis mb-4">
+                                <h6 class="text-muted mb-3">Most Challenging Topics</h6>
+                                {% if subject_insights[subject].difficult_topics %}
+                                    <div class="list-group list-group-flush">
+                                        {% for topic, difficulty in subject_insights[subject].difficult_topics %}
+                                            <div class="list-group-item border-0 px-0 py-2">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>{{ topic }}</div>
+                                                    <div class="difficulty-rating">
+                                                        {% for i in range(5) %}
+                                                            {% if i < difficulty|round(0, 'floor') %}
+                                                                <i class="fas fa-star text-warning"></i>
+                                                            {% elif i < difficulty %}
+                                                                <i class="fas fa-star-half-alt text-warning"></i>
+                                                            {% else %}
+                                                                <i class="far fa-star text-muted"></i>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                <div class="progress mt-1" style="height: 4px;">
+                                                    <div class="progress-bar bg-warning" role="progressbar" 
+                                                         style="width: {{ (difficulty / 5) * 100 }}%"></div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">Not enough data to analyze topics.</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="efficiency-card p-3 border rounded bg-light mb-3">
+                                        <h6 class="text-muted mb-2">UpLearn Efficiency</h6>
+                                        <div class="d-flex align-items-baseline">
+                                            <h3 class="text-success mr-2">{{ subject_insights[subject].uplearn_efficiency|round(2) }}</h3>
+                                            <span class="text-muted">lessons/hour</span>
+                                        </div>
+                                        {% set efficiency_class = 'text-danger' %}
+                                        {% set efficiency_icon = 'fa-arrow-down' %}
+                                        {% if subject_insights[subject].uplearn_efficiency >= 1.0 %}
+                                            {% set efficiency_class = 'text-success' %}
+                                            {% set efficiency_icon = 'fa-arrow-up' %}
+                                        {% endif %}
+                                        <p class="mb-0 {{ efficiency_class }}">
+                                            <i class="fas {{ efficiency_icon }}"></i>
+                                            {% if subject_insights[subject].uplearn_efficiency >= 1.5 %}
+                                                Excellent pace
+                                            {% elif subject_insights[subject].uplearn_efficiency >= 1.0 %}
+                                                Good pace
+                                            {% elif subject_insights[subject].uplearn_efficiency >= 0.5 %}
+                                                Average pace
+                                            {% else %}
+                                                Taking time to understand
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="improvement-card p-3 border rounded bg-light mb-3">
+                                        <h6 class="text-muted mb-2">Recent Progress</h6>
+                                        <div class="d-flex align-items-baseline">
+                                            {% set improvement_class = 'text-success' %}
+                                            {% set improvement_icon = 'fa-arrow-up' %}
+                                            
+                                            {% if subject_insights[subject].improvement < 0 %}
+                                                {% set improvement_class = 'text-danger' %}
+                                                {% set improvement_icon = 'fa-arrow-down' %}
+                                            {% endif %}
+                                            
+                                            <h3 class="{{ improvement_class }} mr-2">
+                                                {% if subject_insights[subject].improvement >= 0 %}+{% endif %}
+                                                {{ subject_insights[subject].improvement|round(2) }}
+                                            </h3>
+                                            <span class="text-muted">difficulty</span>
+                                        </div>
+                                        <p class="mb-0 {{ improvement_class }}">
+                                            <i class="fas {{ improvement_icon }}"></i>
+                                            {% if subject_insights[subject].improvement > 0.5 %}
+                                                Tackling harder topics
+                                            {% elif subject_insights[subject].improvement >= 0 %}
+                                                Steady improvement
+                                            {% elif subject_insights[subject].improvement >= -0.5 %}
+                                                Slight decrease
+                                            {% else %}
+                                                Working on easier material
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendations mt-3">
+                                <h6 class="text-muted mb-2">Recommendations</h6>
+                                <ul class="list-unstyled">
+                                    {% if subject_insights[subject].difficult_topics %}
+                                        <li><i class="fas fa-check-circle text-success mr-2"></i> Focus on revising 
+                                        {% for topic, difficulty in subject_insights[subject].difficult_topics[:2] %}
+                                            "{{ topic }}"{% if not loop.last %} and {% endif %}
+                                        {% endfor %}
+                                        </li>
+                                    {% endif %}
+                                    
+                                    {% if subject_insights[subject].uplearn_efficiency < 1.0 %}
+                                        <li><i class="fas fa-check-circle text-success mr-2"></i> Consider breaking UpLearn sessions into shorter, more focused periods</li>
+                                    {% endif %}
+                                    
+                                    {% if subject_insights[subject].improvement < 0 %}
+                                        <li><i class="fas fa-check-circle text-success mr-2"></i> Challenge yourself with more advanced topics</li>
+                                    {% endif %}
+                                    
+                                    {% if subject_insights[subject].total_tasks < 10 %}
+                                        <li><i class="fas fa-check-circle text-success mr-2"></i> Complete more practice tasks for better data insights</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-white">
+                            <a href="{{ url_for('progress_log') }}" class="btn btn-sm btn-outline-primary">View Detailed Logs</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Study Recommendations</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Based on Your Learning Patterns</h6>
+                            
+                            {% set recommended_subjects = [] %}
+                            {% for subject in ['Chemistry', 'Biology Y13', 'Biology Y12', 'Psychology'] %}
+                                {% if subject in subject_insights %}
+                                    {% if subject_insights[subject].total_tasks < 10 %}
+                                        {% set recommended_subjects = recommended_subjects + [subject] %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if recommended_subjects %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-lightbulb mr-2"></i> You should focus more on 
+                                    {% for subject in recommended_subjects %}
+                                        <strong>{{ subject }}</strong>{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                    to balance your study time across subjects.
+                                </div>
+                            {% else %}
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle mr-2"></i> You have a good balance of study across your subjects.
+                                </div>
+                            {% endif %}
+                            
+                            {% set avg_uplearn_efficiency = 0 %}
+                            {% set count = 0 %}
+                            {% for subject in subject_insights %}
+                                {% if subject_insights[subject].uplearn_efficiency > 0 %}
+                                    {% set avg_uplearn_efficiency = avg_uplearn_efficiency + subject_insights[subject].uplearn_efficiency %}
+                                    {% set count = count + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if count > 0 %}
+                                {% set avg_uplearn_efficiency = avg_uplearn_efficiency / count %}
+                                {% if avg_uplearn_efficiency < 0.8 %}
+                                    <div class="alert alert-warning mt-3">
+                                        <i class="fas fa-exclamation-triangle mr-2"></i> Your overall UpLearn efficiency is below average. Consider reviewing your study technique.
+                                    </div>
+                                {% elif avg_uplearn_efficiency > 1.5 %}
+                                    <div class="alert alert-success mt-3">
+                                        <i class="fas fa-trophy mr-2"></i> Your UpLearn efficiency is impressive! Keep up the great work.
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6>Study Strategy Tips</h6>
+                            <div class="list-group">
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Spaced Repetition</h6>
+                                        <span class="badge bg-success">Recommended</span>
+                                    </div>
+                                    <p class="mb-1 small">Review difficult topics at increasing intervals to improve long-term retention.</p>
+                                </div>
+                                
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Active Recall</h6>
+                                        <span class="badge bg-success">Recommended</span>
+                                    </div>
+                                    <p class="mb-1 small">Test yourself frequently rather than passively reviewing material.</p>
+                                </div>
+                                
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Interleaved Practice</h6>
+                                        <span class="badge bg-info">Try This</span>
+                                    </div>
+                                    <p class="mb-1 small">Mix different subjects or topics within study sessions instead of focusing on just one.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-purple {
+    background-color: #6f42c1;
+}
+
+.difficulty-rating .fas.fa-star,
+.difficulty-rating .far.fa-star,
+.difficulty-rating .fas.fa-star-half-alt {
+    font-size: 0.8rem;
+}
+
+.stat-card {
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.efficiency-card, .improvement-card {
+    transition: transform 0.2s;
+    height: 100%;
+}
+
+.efficiency-card:hover, .improvement-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}
