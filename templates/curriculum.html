@@ -35,6 +35,7 @@
         border-left: 3px solid transparent;
         transition: border-color 0.2s ease;
         color: var(--text-color);
+        position: relative;
     }
     
     .topic-item:hover {
@@ -86,6 +87,64 @@
         margin-left: 10px;
         opacity: 0.8;
     }
+    
+    /* Topic rating styles */
+    .topic-rating {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .rating-stars {
+        display: inline-flex;
+        color: #aaa;
+    }
+    
+    .rating-star {
+        cursor: pointer;
+        margin-right: 5px;
+        transition: color 0.2s, transform 0.1s;
+    }
+    
+    .rating-star:hover {
+        transform: scale(1.2);
+    }
+    
+    .rating-star.fas {
+        color: #FFD700; /* Gold color for filled stars */
+    }
+    
+    .rating-label {
+        font-size: 0.85em;
+        color: var(--text-color);
+        opacity: 0.8;
+    }
+    
+    /* Save confirmation animation */
+    .save-confirmation {
+        position: absolute;
+        right: 15px;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.3s, transform 0.3s;
+    }
+    
+    .save-confirmation.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Proficiency colors */
+    .proficiency-1 { border-left-color: #ff6b6b !important; }
+    .proficiency-2 { border-left-color: #ffa06b !important; }
+    .proficiency-3 { border-left-color: #ffd56b !important; }
+    .proficiency-4 { border-left-color: #9cdb43 !important; }
+    .proficiency-5 { border-left-color: #4CAF50 !important; }
 </style>
 {% endblock %}
 
@@ -119,6 +178,9 @@
                 toggleCollapse(this);
             });
         });
+        
+        // Initialize ratings after collapsibles
+        initializeRatings();
     }
 
     function toggleCollapse(element) {
@@ -129,30 +191,84 @@
 
     function formatCurriculum(data) {
         let html = '';
+        
+        // First render the main curriculum with all subjects
         Object.entries(data).forEach(([subjectKey, subject]) => {
+            if (subjectKey !== "Curriculum") { // Skip the simplified curriculum section for now
+                html += `
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            ${subject.Title || subjectKey}
+                        </div>
+                        <div class="card-body">`;
+
+                if (subject.Papers) {
+                    subject.Papers.forEach(paper => {
+                        html += formatPaper(paper);
+                    });
+                } else if (subject.Years) {
+                    subject.Years.forEach(year => {
+                        html += formatYear(year);
+                    });
+                } else if (subject.Modules) {
+                    subject.Modules.forEach(module => {
+                        html += formatModule(module);
+                    });
+                }
+
+                html += `</div></div>`;
+            }
+        });
+        
+        // Now add the topic proficiency section based on "Curriculum" key
+        if (data.Curriculum) {
             html += `
                 <div class="card mb-4">
                     <div class="card-header">
-                        ${subject.Title || subjectKey}
+                        Topic Proficiency Ratings
                     </div>
-                    <div class="card-body">`;
-
-            if (subject.Papers) {
-                subject.Papers.forEach(paper => {
-                    html += formatPaper(paper);
+                    <div class="card-body">
+                        <p class="mb-3">Rate your understanding of each topic from 1 (beginner) to 5 (expert). 
+                        This will help personalize your study plan.</p>`;
+            
+            Object.entries(data.Curriculum).forEach(([subject, topics]) => {
+                html += `
+                    <div class="subject-section mb-4">
+                        <div class="year-title collapsible">
+                            <i class="fas fa-graduation-cap mr-2"></i> ${subject}
+                        </div>
+                        <div class="collapsible-content">
+                            <div class="topic-list">`;
+                
+                topics.forEach(topic => {
+                    const topicId = topic.toLowerCase().replace(/\s+/g, '_');
+                    html += `
+                        <div class="topic-item" data-topic-id="${topicId}" data-subject="${subject}">
+                            <div class="topic-title">
+                                <i class="fas fa-lightbulb mr-2"></i> ${topic}
+                            </div>
+                            <div class="topic-rating">
+                                <div class="rating-stars" data-rating="0">
+                                    <i class="far fa-star rating-star" data-value="1"></i>
+                                    <i class="far fa-star rating-star" data-value="2"></i>
+                                    <i class="far fa-star rating-star" data-value="3"></i>
+                                    <i class="far fa-star rating-star" data-value="4"></i>
+                                    <i class="far fa-star rating-star" data-value="5"></i>
+                                </div>
+                                <span class="rating-label">Proficiency: Not Rated</span>
+                            </div>
+                        </div>`;
                 });
-            } else if (subject.Years) {
-                subject.Years.forEach(year => {
-                    html += formatYear(year);
-                });
-            } else if (subject.Modules) {
-                subject.Modules.forEach(module => {
-                    html += formatModule(module);
-                });
-            }
-
+                
+                html += `
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            
             html += `</div></div>`;
-        });
+        }
+        
         return html;
     }
 
@@ -184,15 +300,17 @@
         let html = '<div class="topic-list">';
         topics.forEach(topic => {
             if (typeof topic === 'string') {
+                const topicId = generateTopicId(topic);
                 html += `
-                    <div class="topic-item">
+                    <div class="topic-item" data-topic-id="${topicId}">
                         <div class="topic-title">
                             <i class="fas fa-lightbulb mr-2"></i> ${topic}
                         </div>
                     </div>`;
             } else {
+                const topicId = generateTopicId(topic.Title);
                 html += `
-                    <div class="topic-item">
+                    <div class="topic-item" data-topic-id="${topicId}">
                         <div class="topic-title">
                             <i class="fas fa-lightbulb mr-2"></i> ${topic.Title}
                         </div>
@@ -202,6 +320,11 @@
         });
         html += '</div>';
         return html;
+    }
+
+    // Generate a consistent ID for topics
+    function generateTopicId(topicTitle) {
+        return topicTitle.toLowerCase().replace(/[^a-z0-9]/g, '_');
     }
 
     function formatPaper(paper) {
@@ -217,17 +340,197 @@
                     <div class="collapsible-content">
                         <div class="topic-list">
                             ${Array.isArray(topic.Content) 
-                                ? topic.Content.map(item => `
-                                    <div class="topic-item">
+                                ? topic.Content.map(item => {
+                                    const topicId = generateTopicId(item);
+                                    return `
+                                    <div class="topic-item" data-topic-id="${topicId}">
                                         <div class="topic-title">
                                             <i class="fas fa-check-circle mr-2"></i> ${item}
                                         </div>
-                                    </div>`).join('') 
+                                    </div>`
+                                }).join('') 
                                 : ''}
                         </div>
                     </div>
                 `).join('')}
             </div>`;
+    }
+    
+    // Initialize rating functionality
+    function initializeRatings() {
+        // Add event listeners to all rating stars
+        document.querySelectorAll('.rating-star').forEach(star => {
+            star.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const starValue = parseInt(this.getAttribute('data-value'));
+                const ratingStars = this.parentElement;
+                const topicItem = ratingStars.closest('.topic-item');
+                const topicId = topicItem.getAttribute('data-topic-id');
+                
+                // Update UI
+                updateRatingUI(ratingStars, starValue);
+                
+                // Send rating to server
+                saveRating(topicId, starValue);
+            });
+            
+            // Add hover effect
+            star.addEventListener('mouseenter', function() {
+                const starValue = parseInt(this.getAttribute('data-value'));
+                const ratingStars = this.parentElement;
+                previewRating(ratingStars, starValue);
+            });
+            
+            star.addEventListener('mouseleave', function() {
+                const ratingStars = this.parentElement;
+                const currentRating = parseInt(ratingStars.getAttribute('data-rating'));
+                resetRatingUI(ratingStars, currentRating);
+            });
+        });
+        
+        // Load existing ratings from the server
+        loadUserRatings();
+    }
+
+    // Preview rating on hover
+    function previewRating(ratingStars, value) {
+        ratingStars.querySelectorAll('.rating-star').forEach(star => {
+            const starValue = parseInt(star.getAttribute('data-value'));
+            if (starValue <= value) {
+                star.classList.remove('far');
+                star.classList.add('fas');
+            } else {
+                star.classList.remove('fas');
+                star.classList.add('far');
+            }
+        });
+    }
+
+    // Reset rating display to current value
+    function resetRatingUI(ratingStars, currentRating) {
+        ratingStars.querySelectorAll('.rating-star').forEach(star => {
+            const starValue = parseInt(star.getAttribute('data-value'));
+            if (starValue <= currentRating) {
+                star.classList.remove('far');
+                star.classList.add('fas');
+            } else {
+                star.classList.remove('fas');
+                star.classList.add('far');
+            }
+        });
+    }
+
+    // Update UI after rating is set
+    function updateRatingUI(ratingStars, value) {
+        // Update data attribute
+        ratingStars.setAttribute('data-rating', value);
+        
+        // Update stars
+        resetRatingUI(ratingStars, value);
+        
+        // Update label
+        const label = ratingStars.parentElement.querySelector('.rating-label');
+        label.textContent = `Proficiency: ${getProficiencyLabel(value)}`;
+        
+        // Add visual feedback
+        const topicItem = ratingStars.closest('.topic-item');
+        
+        // Remove any existing proficiency classes
+        for (let i = 1; i <= 5; i++) {
+            topicItem.classList.remove(`proficiency-${i}`);
+        }
+        
+        // Add the new proficiency class
+        topicItem.classList.add(`proficiency-${value}`);
+        
+        // Show confirmation animation
+        showSaveConfirmation(topicItem);
+    }
+
+    // Get text label for numerical rating
+    function getProficiencyLabel(value) {
+        const labels = [
+            'Not Rated',
+            'Beginner',
+            'Basic',
+            'Intermediate',
+            'Advanced',
+            'Expert'
+        ];
+        return labels[value] || labels[0];
+    }
+
+    // Send rating to server
+    function saveRating(topicId, rating) {
+        fetch('/api/ratings/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                topic_id: topicId,
+                rating: rating
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to save rating');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error saving rating:', error);
+        });
+    }
+
+    // Load user's existing ratings
+    function loadUserRatings() {
+        fetch('/api/ratings/get')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load ratings');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Apply ratings to UI
+                if (data.ratings) {
+                    Object.entries(data.ratings).forEach(([topicId, rating]) => {
+                        const topicItem = document.querySelector(`.topic-item[data-topic-id="${topicId}"]`);
+                        if (topicItem) {
+                            const ratingStars = topicItem.querySelector('.rating-stars');
+                            if (ratingStars) {
+                                updateRatingUI(ratingStars, rating);
+                            }
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading ratings:', error);
+            });
+    }
+
+    // Show temporary save confirmation
+    function showSaveConfirmation(element) {
+        const confirmation = document.createElement('div');
+        confirmation.className = 'save-confirmation';
+        confirmation.textContent = 'Saved!';
+        
+        element.appendChild(confirmation);
+        
+        // Animate
+        setTimeout(() => {
+            confirmation.classList.add('show');
+        }, 10);
+        
+        // Remove after animation
+        setTimeout(() => {
+            confirmation.classList.remove('show');
+            setTimeout(() => {
+                element.removeChild(confirmation);
+            }, 300);
+        }, 1500);
     }
 </script>
 {% endblock %}

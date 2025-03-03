@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="welcome-container" data-step="{{ user.onboarding_step|default(1) }}">
+    <h1>Welcome to Your Study Planner</h1>
+    
+    <!-- Progress indicator -->
+    <div class="progress-steps">
+        <div class="step {% if user.onboarding_step >= 1 %}active{% endif %}">1. Subject & Study Setup</div>
+        <div class="step {% if user.onboarding_step >= 2 %}active{% endif %}">2. Topic Preferences</div>
+    </div>
+    
+    <!-- Step 1: Subject Selection and Study Preferences -->
+    <div id="step1" class="step-content" {% if user.onboarding_step > 1 %}style="display: none;"{% endif %}>
+        <form method="POST" action="{{ url_for('welcome') }}">
+            <div class="subject-selection">
+                <h2>Select Your Subjects</h2>
+                <div class="subject-options">
+                    <label class="subject-option">
+                        <input type="checkbox" name="chemistry" id="chemistry"
+                               {% if user.subjects and user.subjects.chemistry %}checked{% endif %}
+                               aria-label="Toggle Chemistry subject">
+                        <span class="subject-name">Chemistry</span>
+                    </label>
+                    <label class="subject-option">
+                        <input type="checkbox" name="biology" id="biology"
+                               {% if user.subjects and user.subjects.biology %}checked{% endif %}
+                               aria-label="Toggle Biology subject">
+                        <span class="subject-name">Biology</span>
+                    </label>
+                    <p class="note">* Psychology is included by default</p>
+                </div>
+            </div>
+
+            <div class="study-preferences">
+                <h2>Study Preferences</h2>
+                <div class="preference-item">
+                    <label for="daily_study_hours">Daily Study Hours Target:</label>
+                    <input type="number" id="daily_study_hours" name="daily_study_hours" 
+                           value="{{ user.daily_study_hours|default(4.0) }}" min="0.5" max="12" step="0.5" required
+                           class="form-control" aria-label="Target study hours per day">
+                </div>
+            </div>
+
+            <input type="hidden" name="step1" value="true">
+            <button type="submit" class="btn btn-primary">Continue to Topic Preferences</button>
+        </form>
+    </div>
+
+    <!-- Step 2: Compact Curriculum -->
+    <div id="step2" class="step-content" {% if user.onboarding_step == 1 %}style="display: none;"{% endif %}>
+        <form method="POST" action="{{ url_for('welcome') }}" class="curriculum-form">
+            <div class="compact-curriculum">
+                <h2>Customize Your Study Topics</h2>
+                <p class="instructions">
+                    Adjust how frequently each topic appears in your study recommendations:
+                    <br>
+                    <span class="btn-info">(-) More practice needed</span>
+                    <span class="btn-info">(⏺) Default frequency</span>
+                    <span class="btn-info">(+) Less practice needed</span>
+                </p>
+
+                {% for subject, topics in curriculum.items() %}
+                    {% if subject == 'Psychology' or 
+                          (subject == 'Chemistry' and user.subjects.chemistry) or 
+                          (subject == 'Biology' and user.subjects.biology) %}
+                        <div class="subject-section">
+                            <h3>{{ subject }}</h3>
+                            <div class="topics-grid">
+                                {% for topic in topics %}
+                                <div class="topic-item">
+                                    <span class="topic-name">{{ topic }}</span>
+                                    <div class="frequency-controls">
+                                        <button type="button" class="freq-btn minus" 
+                                                onclick="updateFrequency('{{ subject }}', '{{ topic }}', -1)"
+                                                aria-label="Less practice for {{ topic }}">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="hidden" name="topic_{{ subject }}_{{ topic }}" 
+                                               id="freq_{{ subject }}_{{ topic }}" value="0">
+                                        <span class="frequency-indicator" id="indicator_{{ subject }}_{{ topic }}">⏺</span>
+                                        <button type="button" class="freq-btn plus"
+                                                onclick="updateFrequency('{{ subject }}', '{{ topic }}', 1)"
+                                                aria-label="More practice for {{ topic }}">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <input type="hidden" name="step2" value="true">
+            <button type="submit" class="btn btn-primary">
+                {% if settings_mode %}
+                    Save Changes
+                {% else %}
+                    Complete Setup
+                {% endif %}
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+function updateFrequency(subject, topic, value) {
+    const container = event.target.closest('.frequency-controls');
+    const input = container.querySelector('input[type="hidden"]');
+    const buttons = container.querySelectorAll('.freq-btn');
+    
+    // Update hidden input
+    input.value = value;
+    
+    // Update button states
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Announce change for screen readers
+    const message = `${topic} frequency set to ${value === -1 ? 'more practice' : value === 1 ? 'less practice' : 'default'}`;
+    announceChange(message);
+}
+
+function announceChange(message) {
+    // Create or get existing live region
+    let liveRegion = document.getElementById('liveRegion');
+    if (!liveRegion) {
+        liveRegion = document.createElement('div');
+        liveRegion.id = 'liveRegion';
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.style.position = 'absolute';
+        liveRegion.style.clip = 'rect(1px, 1px, 1px, 1px)';
+        liveRegion.style.overflow = 'hidden';
+        document.body.appendChild(liveRegion);
+    }
+    
+    // Update message
+    liveRegion.textContent = message;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle step transitions
+    const step1Form = document.querySelector('#step1 form');
+    const step1Content = document.getElementById('step1');
+    const step2Content = document.getElementById('step2');
+
+    if (step1Form) {
+        step1Form.addEventListener('submit', function(e) {
+            // Let the form submit naturally, server will handle the transition
+        });
+    }
+
+    // Check if we're on step 2 using data attribute
+    const welcomeContainer = document.querySelector('.welcome-container');
+    const onboardingStep = parseInt(welcomeContainer.getAttribute('data-step') || '1');
+    if (onboardingStep > 1) {
+        if (step1Content) step1Content.style.display = 'none';
+        if (step2Content) step2Content.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

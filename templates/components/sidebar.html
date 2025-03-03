@@ -23,6 +23,9 @@
                 <a href="{{ url_for('study_analytics') }}" class="btn btn-outline-primary mb-2 {% if request.endpoint == 'study_analytics' %}active{% endif %}">
                     <i class="fas fa-chart-line mr-2"></i> Study Analytics
                 </a>
+                <a href="{{ url_for('welcome') }}" class="btn btn-outline-primary mb-2 {% if request.endpoint == 'welcome' %}active{% endif %}">
+                    <i class="fas fa-cog mr-2"></i> Settings
+                </a>
             </div>
         </div>
         
@@ -110,6 +113,10 @@
     
     <a href="{{ url_for('study_analytics') }}" class="mini-button warning {% if request.endpoint == 'study_analytics' %}active{% endif %}" title="Study Analytics">
         <i class="fas fa-chart-line"></i>
+    </a>
+    
+    <a href="{{ url_for('welcome') }}" class="mini-button primary {% if request.endpoint == 'welcome' %}active{% endif %}" title="Settings">
+        <i class="fas fa-cog"></i>
     </a>
     
     {% if current_user.subjects and (current_user.subjects.chemistry or current_user.subjects.biology) %}

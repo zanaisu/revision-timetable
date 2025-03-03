@@ -20,9 +20,8 @@ loglevel = "info"
 # Process naming
 proc_name = "RevisionTimetable"
 
-# SSL/TLS settings (if needed)
-# keyfile = "/path/to/keyfile"
-# certfile = "/path/to/certfile"
+# Application module
+wsgi_app = "app:app"
 
 # Max requests settings
 max_requests = 1000

@@ -1,4 +1,3 @@
-
 {
   "Biology": {
     "Title": "OCR A-Level Biology (H420)",
@@ -496,6 +495,49 @@
           }
         ]
       }
+    ]
+  },
+  "Curriculum": {
+    "Chemistry": [
+        "Atomic Structure & Periodic Table",
+        "Bonding & Structure",
+        "Energetics",
+        "Kinetics",
+        "Chemical Equilibria",
+        "Acids & Bases",
+        "Redox Reactions",
+        "Organic Chemistry",
+        "Analytical Techniques",
+        "Transition Metals"
+    ],
+    "Biology": [
+        "Cell Structure & Transport",
+        "Biological Molecules",
+        "Enzymes",
+        "DNA & RNA",
+        "Genetic Information",
+        "Biodiversity",
+        "Exchange & Transport",
+        "Disease & Immunity",
+        "Photosynthesis",
+        "Respiration",
+        "Nervous System",
+        "Hormones",
+        "Evolution",
+        "Ecosystems"
+    ],
+    "Psychology": [
+        "Social Influence",
+        "Memory",
+        "Attachment",
+        "Psychopathology",
+        "Approaches",
+        "Biopsychology",
+        "Research Methods",
+        "Issues & Debates",
+        "Schizophrenia",
+        "Aggression",
+        "Relationships"
     ]
   }
 }
